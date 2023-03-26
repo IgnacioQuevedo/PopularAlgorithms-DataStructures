@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 
-//LA GRACIA DE USAR UNA CLASE, ES QUE NO SE NECESITA LLAMAR POR PARAMETRO SIEMPRE AL HASH, DADO QUE AL SER
-//UNA CLASE, LA PUEDO LLAMAR EN TODO EL ARCHIVO SIN NECESIDAD DE IR PASANDOME EL HASH COMO PARAMETRO.
+//LA GRACIA DE USAR UNA CLASE, ES QUE NO SE NECESITA LLAMAR POR PARAMETRO SIEMPRE AL HASH, DADO QUE AL
+//SER UNA CLASE, LA PUEDO LLAMAR EN TODO EL ARCHIVO SIN NECESIDAD DE IR PASANDOME EL HASH COMO PARAMETRO.
 //CON UTILIZAR THIS->LoQueMeInteresa YA QUEDA.
 
 
@@ -30,8 +30,6 @@ class HashCerrado{ //LA BOLSA
         int largoEsperado; //Largo esperado del hash
 
 
-
-
         bool esPrimo(int largoEsperado){
 
             if(largoEsperado <=1){
@@ -54,6 +52,7 @@ class HashCerrado{ //LA BOLSA
 
 
         }
+        
         int funcionHash(T dato, int largoEsperado){  //DARME EL VALOR DE LA POS
             //quadratica
             //TODO EL METODO PARA SACAR CUANTO ES posH
@@ -70,7 +69,7 @@ class HashCerrado{ //LA BOLSA
             this->Tablahash = new nodoHash<T>* [this->largoEsperado]; //CREO LA TABLAHASH (VECTOR DE TIPO T) CON ESE LARGO (VECTOR)
             this->cantElementos = 0; //SETTEO LA CANT ELEMENTOS
 
-            for(int i=0;i<this->largoEsperado;i++){
+            for(int i=0;i<this->largoEsperado;i++){ // ME ASEGURO QUE EL HASH ESTÉ VACIO.
                 this->Tablahash[i] = NULL;
             }
         }
@@ -82,10 +81,6 @@ class HashCerrado{ //LA BOLSA
             this->cantElementos++;  
         } 
 
-
-        
-        
-    
 };
 
 
