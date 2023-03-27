@@ -8,16 +8,21 @@ using namespace std;
 
 template <class T> //NOS CREA LA CLASE DE TIPO T
 class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH, AL DEFINIRL LA LISTA SE CREA EL NODOHASH.
-
     public: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI NODOHASH)
-    int clave; //LA POS EXACTA CALCULADA EN LA CUADRATICA
+    T clave; //LA POS EXACTA CALCULADA EN LA CUADRATICA
     T dato;   // DATO ES EL PROMEDIO
-
-    //LE DA FORMA A MI nodoHash
-    CrearNodoHash(T dato1, T clave1){
+     nodoHash(T dato1, T clave1){
         this->clave = clave1; //EN UN FUTURO SERA EL NOMBRE DE USUARIO CALCULADO POR LA CUADRATICA
         this->dato = dato1; // EN UN FUTURO SERA EL PROMEDIO
     }
+
+    nodoHash(){
+        this->clave = NULL; //EN UN FUTURO SERA EL NOMBRE DE USUARIO CALCULADO POR LA CUADRATICA
+        this->dato = NULL; // EN UN FUTURO SERA EL PROMEDIO
+    }
+
+    //LE DA FORMA A MI nodoHash
+    
 };
 
 template <class T> 
@@ -25,7 +30,7 @@ class HashCerrado{ //LA BOLSA
 
     private: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI HASH
 
-        nodoHash<T> *Tablahash; //vector que contiene al hash compuesto de cubos de tipo nodoHash
+        nodoHash<T> **Tablahash; //vector que contiene al hash compuesto de cubos de tipo nodoHash
         int cantElementos; //cantElementos Actual.
         int largoEsperado; //Largo esperado del hash
 
@@ -57,12 +62,14 @@ class HashCerrado{ //LA BOLSA
         
     public:
         //LE DA VIDA A MI HASH, "LO CREA"
-        crearHashCerrado(int largoEsperado1){
+        HashCerrado(int largoEsperado1){
             this->largoEsperado = sigPrimo(largoEsperado1); //DEFINO EL LARGO DE LA TABLAHASH
-            this->Tablahash = new nodoHash<T>* [this->largoEsperado]; //CREO LA TABLAHASH (VECTOR DE TIPO T) CON ESE LARGO (VECTOR)
+            this->Tablahash = new nodoHash<T>*[largoEsperado1]; //CREO LA TABLAHASH (VECTOR DE TIPO T) CON ESE LARGO (VECTOR)
             this->cantElementos = 0; //SETTEO LA CANT ELEMENTOS
 
-            for(int i=0;i<this->largoEsperado;i++){ // ME ASEGURO QUE EL HASH ESTÉ VACIO.
+            for(int i=0;i<this->largoEsperado;i++){
+                 // ME ASEGURO QUE EL HASH ESTÉ VACIO.
+
                 this->Tablahash[i] = NULL;
             }
         }
@@ -72,13 +79,8 @@ class HashCerrado{ //LA BOLSA
             nodoHash<T>* elementoNuevo = new nodoHash<T>(datoClave,datoAGuardar);
             this->Tablahash[funcionHash(datoClave)] = elementoNuevo;  
             this->cantElementos++;  
-        } 
-
+        }
 };
-
-
-//DUDAS 
-//PORQUE HACER SIGUIENTE PRIMO SI ME DAN EL LARGO EXACTO?? EVITO COLISIONES???
 
 
 
@@ -130,8 +132,10 @@ class HashCerrado{ //LA BOLSA
 
 int main(int argc, char const *argv[])
 {
-    /* code */
-    return 0;
+    int a =0;
+    HashCerrado<int>* miHash= new HashCerrado<int>(7);
+    //int a = sistema.sigPrimo(5);
+    return a;
 }
 
  // //POS: ME DEVUELVE EL PROMEDIO DEL NOMBRE
