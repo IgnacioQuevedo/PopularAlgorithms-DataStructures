@@ -4,35 +4,51 @@ using namespace std;
 
 template <class T>
 
-class NodoLista{
-
-
-    //MI STRUCT (LO QUE VA A TENER MI NODOLISTA)
-    private:
-    NodoLista* sig;
-
+class nodoLista{
     public:
     T dato;
-
-    //TENGO QUE DARLE VIDA A LA LISTA (CONSTRUCTOR)
-
-    NodoLista(T dato1){
-
-        this->dato = dato1;
+    nodoLista* sig;
+    
+    crearNodoLista(T dato){
+        this->dato = dato;
         this->sig = NULL;
+    }
+};
 
+template <class T>
+class Lista{
+
+    private:
+    nodoLista<T>*ppio;
+    nodoLista<T>*fin;
+    int cantElem;
+
+    public:
+
+    crearLista(){
+        this->ppio = NULL;
+        this->fin = NULL;
+        this->cantElem = 0;
     }
 
-    agregarElem(T dato){
+    public:
 
-        if(NodoLista == NULL){
+      
+     agregarElem(T dato){
+        if(this->ppio == NULL){
 
-            NodoLista elem = new NodoLista(dato);
+            nodoLista<T>* elem = new nodoLista(dato);
+            elem->sig = NULL;
+            this->ppio = elem;
+            this->fin = elem;
+            this->cantElem++;
         }
         else{
-
-            agregarElem(this->sig,dato);
-
+            nodoLista<T>* elem = new NodoLista(dato);
+            elem->sig = NULL;
+            this->fin->sig = elem;
+            this->fin = elem;
+            this->cantElem++;
         }
     }
 };

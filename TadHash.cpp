@@ -7,14 +7,14 @@ using namespace std;
 
 
 template <class T> //NOS CREA LA CLASE DE TIPO T
-class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH
+class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH, AL DEFINIRL LA LISTA SE CREA EL NODOHASH.
 
     public: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI NODOHASH)
     int clave; //LA POS EXACTA CALCULADA EN LA CUADRATICA
     T dato;   // DATO ES EL PROMEDIO
 
     //LE DA FORMA A MI nodoHash
-    nodoHash(T dato1, T clave1){
+    CrearNodoHash(T dato1, T clave1){
         this->clave = clave1; //EN UN FUTURO SERA EL NOMBRE DE USUARIO CALCULADO POR LA CUADRATICA
         this->dato = dato1; // EN UN FUTURO SERA EL PROMEDIO
     }
@@ -29,28 +29,23 @@ class HashCerrado{ //LA BOLSA
         int cantElementos; //cantElementos Actual.
         int largoEsperado; //Largo esperado del hash
 
-
         bool esPrimo(int largoEsperado){
-
             if(largoEsperado <=1){
                 return false;
             }
-            else{
+            else{           
                 for(int i=2; i<= largoEsperado/2;i++){
-                    if(num % i == 0){ //SI ESTO OCURRE ENTONCES EL NUM ES PAR
+                    if(largoEsperado % i == 0){ //SI ESTO OCURRE ENTONCES EL NUM ES PAR
                         return false;
                     }
                 }
-                return true; // SI NO OCURRE ENTONCES ES IMPAR
+                return true; // SI OCURRE ENTONCES ES IMPAR
             }
         }
 
         int sigPrimo(int largoEsperado){
-
             while(!esPrimo(++largoEsperado)); // SI DA FALSE AUMENTA UNO, ENTONCES GENERA QUE SEA IMPAR
             return largoEsperado;
-
-
         }
         
         int funcionHash(T dato, int largoEsperado){  //DARME EL VALOR DE LA POS
@@ -61,10 +56,8 @@ class HashCerrado{ //LA BOLSA
         
         
     public:
-        
         //LE DA VIDA A MI HASH, "LO CREA"
         crearHashCerrado(int largoEsperado1){
-            HashCerrado Hash = new HashCerrado; //CREO LA BOLSA
             this->largoEsperado = sigPrimo(largoEsperado1); //DEFINO EL LARGO DE LA TABLAHASH
             this->Tablahash = new nodoHash<T>* [this->largoEsperado]; //CREO LA TABLAHASH (VECTOR DE TIPO T) CON ESE LARGO (VECTOR)
             this->cantElementos = 0; //SETTEO LA CANT ELEMENTOS
@@ -84,8 +77,8 @@ class HashCerrado{ //LA BOLSA
 };
 
 
-
-
+//DUDAS 
+//PORQUE HACER SIGUIENTE PRIMO SI ME DAN EL LARGO EXACTO?? EVITO COLISIONES???
 
 
 
