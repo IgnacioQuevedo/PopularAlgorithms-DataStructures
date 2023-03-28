@@ -28,7 +28,7 @@ class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH, AL DEFINIRL LA
 template <class T> 
 class HashCerrado{ //LA BOLSA
 
-    private: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI HASH
+    private: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI HASH)
 
         nodoHash<T> **Tablahash; //vector que contiene al hash compuesto de cubos de tipo nodoHash
         int cantElementos; //cantElementos Actual.
@@ -47,19 +47,23 @@ class HashCerrado{ //LA BOLSA
                 return true; // SI OCURRE ENTONCES ES IMPAR
             }
         }
-
         int sigPrimo(int largoEsperado){
             while(!esPrimo(++largoEsperado)); // SI DA FALSE AUMENTA UNO, ENTONCES GENERA QUE SEA IMPAR
             return largoEsperado;
         }
         
-        int funcionHash(T dato, int largoEsperado){  //DARME EL VALOR DE LA POS
-            //quadratica
-            //TODO EL METODO PARA SACAR CUANTO ES posH
+        int funcionHash(int clave, HashCerrado& hash) {
+            int resto = clave % hash->largoEsperado;
+            if (resto < 0) {
+                resto = resto * -1;
+            }
+	    return resto;
         }
 
-        
-        
+        int cuadratica(HashCerrado& hash, int pos){
+            
+
+        }
     public:
         //LE DA VIDA A MI HASH, "LO CREA"
         HashCerrado(int largoEsperado1){
@@ -75,10 +79,20 @@ class HashCerrado{ //LA BOLSA
         }
 
         //datoClave, ES LA KEY A CALCULAR PARA LA FHASH
-        void agregarElemento(T datoClave, T datoAGuardar){
-            nodoHash<T>* elementoNuevo = new nodoHash<T>(datoClave,datoAGuardar);
-            this->Tablahash[funcionHash(datoClave)] = elementoNuevo;  
-            this->cantElementos++;  
+        void agregarElemento(T clave, T dato, HashCerrado &hash){
+            int pos = funcionHash(clave, hash);
+            if(!ocupado(pos, hash)){
+            nodoHash<T>* elementoNuevo = new nodoHash<T>(clave,dato);
+            this->Tablahash[funcionHash(clave, hash)] = elementoNuevo;  
+            this->cantElementos++;
+            }
+            else{
+                int posNueva = 0;
+                posNueva = cuadratica(hash, pos);
+                nodoHash<T>* elementoNuevo = new nodoHash<T>(clave,dato);
+                this->Tablahash[funcionHash(clave, hash)] = elementoNuevo;  
+                this->cantElementos++;
+            }
         }
 };
 
