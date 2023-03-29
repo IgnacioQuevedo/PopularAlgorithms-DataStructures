@@ -51,19 +51,34 @@ class HashCerrado{ //LA BOLSA
             while(!esPrimo(++largoEsperado)); // SI DA FALSE AUMENTA UNO, ENTONCES GENERA QUE SEA IMPAR
             return largoEsperado;
         }
+
+        int calcularClave(T clave){ //ME TRANSFORMA LA CLAVE A UN INT DONDE CON SE INT CONSEGUIRÉ LA POSICION.
+
+        }
         
-        int funcionHash(int clave, HashCerrado& hash) {
+        bool ocupado(int pos){
+            if(this->Tablahash[pos]==NULL){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        int funcionHash(int clave) {
             int resto = clave % hash->largoEsperado;
             if (resto < 0) {
                 resto = resto * -1;
             }
-	    return resto;
+	        return resto;
         }
 
         int cuadratica(HashCerrado& hash, int pos){
             
 
         }
+
+
     public:
         //LE DA VIDA A MI HASH, "LO CREA"
         HashCerrado(int largoEsperado1){
@@ -79,18 +94,19 @@ class HashCerrado{ //LA BOLSA
         }
 
         //datoClave, ES LA KEY A CALCULAR PARA LA FHASH
-        void agregarElemento(T clave, T dato, HashCerrado &hash){
-            int pos = funcionHash(clave, hash);
-            if(!ocupado(pos, hash)){
+        void agregarElemento(T clave, T dato){
+            int pos = funcionHash(calcularClave(clave));
+
+            if(!ocupado(pos)){ // SI NO ESTA OCUPADO, AGREGA
             nodoHash<T>* elementoNuevo = new nodoHash<T>(clave,dato);
-            this->Tablahash[funcionHash(clave, hash)] = elementoNuevo;  
+            this->Tablahash[pos] = elementoNuevo;  
             this->cantElementos++;
             }
+
             else{
-                int posNueva = 0;
-                posNueva = cuadratica(hash, pos);
+                pos = cuadratica(pos); //A IMPLEMENTAR, ACTUALIZO EL POS CON UNO NUEVO
                 nodoHash<T>* elementoNuevo = new nodoHash<T>(clave,dato);
-                this->Tablahash[funcionHash(clave, hash)] = elementoNuevo;  
+                this->Tablahash[pos] = elementoNuevo;  
                 this->cantElementos++;
             }
         }
