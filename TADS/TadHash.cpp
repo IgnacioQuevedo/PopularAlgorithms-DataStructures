@@ -53,10 +53,10 @@ class HashCerrado{ //LA BOLSA
         }
 
         int calcularClave(T clave){ //ME TRANSFORMA LA CLAVE A UN INT DONDE CON SE INT CONSEGUIRÉ LA POSICION.
-
+            return 0;
         }
         
-        bool ocupado(int pos){
+        bool libre(int pos){
             if(this->Tablahash[pos]==NULL){
                 return true;
             }
@@ -66,15 +66,15 @@ class HashCerrado{ //LA BOLSA
         }
         
         int funcionHash(int clave) {
-            int resto = clave % hash->largoEsperado;
+            int resto = clave % this->largoEsperado;
             if (resto < 0) {
                 resto = resto * -1;
             }
 	        return resto;
         }
 
-        int cuadratica(HashCerrado& hash, int pos){
-            
+        int cuadratica(int pos){
+            return 0;
 
         }
 
@@ -97,7 +97,7 @@ class HashCerrado{ //LA BOLSA
         void agregarElemento(T clave, T dato){
             int pos = funcionHash(calcularClave(clave));
 
-            if(!ocupado(pos)){ // SI NO ESTA OCUPADO, AGREGA
+            if(libre(pos)){ // SI NO ESTA OCUPADO, AGREGA
             nodoHash<T>* elementoNuevo = new nodoHash<T>(clave,dato);
             this->Tablahash[pos] = elementoNuevo;  
             this->cantElementos++;
@@ -164,6 +164,7 @@ int main(int argc, char const *argv[])
 {
     int a =0;
     HashCerrado<int>* miHash= new HashCerrado<int>(7);
+    miHash->agregarElemento(7,2);
     //int a = sistema.sigPrimo(5);
     return a;
 }
