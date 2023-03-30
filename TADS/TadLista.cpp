@@ -9,7 +9,7 @@ class nodoLista{
     T dato;
     nodoLista* sig;
     
-    crearNodoLista(T dato){
+    nodoLista(T dato){
         this->dato = dato;
         this->sig = NULL;
     }
@@ -25,7 +25,7 @@ class Lista{
 
     public:
 
-    crearLista(){
+    Lista(){
         this->ppio = NULL;
         this->fin = NULL;
         this->cantElem = 0;
@@ -33,7 +33,6 @@ class Lista{
 
     public:
 
-      
      agregarElem(T dato){
         if(this->ppio == NULL){
 
@@ -88,6 +87,6 @@ class Lista{
 
 int main(int argc, char const *argv[])
 {
-    /* code */
+    Lista nuevo = new Lista(1) 
     return 0;
 }
