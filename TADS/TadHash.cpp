@@ -10,10 +10,10 @@ using namespace std;
 
 class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH, AL DEFINIRL LA LISTA SE CREA EL NODOHASH.
     public: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI NODOHASH)
-    string clave; //LA POS EXACTA CALCULADA EN LA CUADRATICA
+    char* clave; //LA POS EXACTA CALCULADA EN LA CUADRATICA
     int dato;   // DATO ES EL PROMEDIO
 
-     nodoHash(string clave1, int dato1){
+     nodoHash(char* clave1, int dato1){
         this->clave = clave1; //EN UN FUTURO SERA EL NOMBRE DE USUARIO CALCULADO POR LA CUADRATICA
         this->dato = dato1; // EN UN FUTURO SERA EL PROMEDIO
     }
@@ -53,11 +53,11 @@ class HashCerrado{ //LA BOLSA
             {
                 return 1;
             }
-            return base * potenciaElevada(elevado--,base);
+            return base * potenciaElevada(--elevado,base);
         }
 
     
-        int horner(string clave){ //ME TRANSFORMA LA CLAVE A UN INT DONDE CON SE INT CONSEGUIRÉ LA POSICION (HORNER).
+        int horner(char* clave){ //ME TRANSFORMA LA CLAVE A UN INT DONDE CON ESE INT CONSEGUIRÉ LA POSICION (HORNER).
             
             unsigned long long claveConvertida = 0;
             int largoPalabra = 0;
@@ -99,7 +99,7 @@ class HashCerrado{ //LA BOLSA
 
             while(!libre(posOcupada))
             {
-                posOcupada = (posOcupada + potenciaElevada(2,i)) % this->largoEsperado;
+                posOcupada = funcionHash(posOcupada + potenciaElevada(2,i)); //NUEVA POSICION A ESTUDIAR
                 i++;
             }
         }
@@ -120,7 +120,7 @@ class HashCerrado{ //LA BOLSA
         }
 
         //datoClave, ES LA KEY A CALCULAR PARA LA FHASH
-        void agregarElemento(string clave, int dato){
+        void agregarElemento(char* clave, int dato){
 
             int pos = funcionHash(horner(clave));
 
@@ -139,10 +139,23 @@ class HashCerrado{ //LA BOLSA
         }
 
         //MOSTRAR DATO
-        int mostrarPromedio(string nombre)
+        int mostrarPromedio(char* nombre)
         {
             int promedioADar = funcionHash(horner(nombre)); //ME CONSIGUE EL PROMEDIO DEL NOMBRE ESPECIFICO
             return(promedioADar);
+        }
+
+
+        void destruir(){
+
+            for (int i = 0; i < this->largoEsperado; i++)
+            {
+                
+            }
+            
+
+
+
         }
 
 };
@@ -198,7 +211,7 @@ class HashCerrado{ //LA BOLSA
 int main(int argc, char const *argv[])
 {
     int a =0;
-    HashCerrado* miHash= new HashCerrado(7);
+    HashCerrado* miHash= new HashCerrado(7);  //SI NO TENES EL PUNTERO NO HAY FORMA DE LLEGAR A LA "BOLSA" QUE SERÍA MI HASH
     miHash->agregarElemento("hola",2);
     //int a = sistema.sigPrimo(5);
     return a;
