@@ -148,14 +148,13 @@ class HashCerrado{ //LA BOLSA
 
         void destruir(){
 
-            for (int i = 0; i < this->largoEsperado; i++)
-            {
-                
-            }
-            
+           for (int i = 0; i < this->largoEsperado; i++)
+           {
+            delete this->Tablahash[i]; //VA SIN CORCHETES PORQUE ESTOY BORRANDO PUNTEROS
+            this->cantElementos--; // CADA VEZ QUE BORRO BAJO UNO LA CANT ELEMENTOS
+           }
 
-
-
+            delete[] this->Tablahash; //UNA VEZ VACIA BORRO LA TABLA HASH ENTERA 
         }
 
 };

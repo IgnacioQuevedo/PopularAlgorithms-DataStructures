@@ -1,5 +1,7 @@
 #include <iostream>
 using namespace std;
+#include "TadHash.cpp"
+
 
 
 class nodoLista
@@ -53,5 +55,9 @@ public:
 
 int main(int argc, char const *argv[])
 {
+
+    HashCerrado* nuevo = new HashCerrado(3);
+    nuevo->agregarElemento("hola",60);
+
 return 0;
 }
