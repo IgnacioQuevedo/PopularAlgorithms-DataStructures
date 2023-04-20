@@ -1,8 +1,5 @@
 #include <iostream>
 using namespace std;
-#include "TadHash.cpp"
-
-
 
 class nodoLista
 {

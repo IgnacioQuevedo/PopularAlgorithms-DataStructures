@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 template <typename K, typename V>
@@ -95,7 +96,7 @@ public:
         {
             Tablahash[i] = NULL;
         }
-        this->funcionHash = funcionHash; //el ptr al inicio está en null(es necesario definir esta linea)
+        this->funcionHash = funcionHash; // el ptr al inicio está en null(es necesario definir esta linea)
     }
 
     void agregarElemento(K clave, V dato)
@@ -118,6 +119,30 @@ public:
         }
     }
 
+    // CAMBIAR ESTUDIANTE, POR DATO Y PROMEDIO POR DATO2
+    int buscar(K estudiante)
+    {
+
+        int pos = 0;
+        bool encontre = false;
+        pos = (this->funcionHash(estudiante)) % this->largoEsperado;
+
+        if (this->Tablahash[pos]->clave == estudiante)
+        {
+            encontre = true;
+        }
+        while (!encontre)
+        {
+            pos = cuadratica(pos);
+            if (this->Tablahash[pos]->clave == estudiante)
+            {
+                encontre;
+            }
+        }
+
+        return Tablahash[pos]->dato;
+    }
+
     void destruir()
     {
 
@@ -132,44 +157,3 @@ public:
 
     // Métodos para buscar y eliminar elementos del hash
 };
-
-// Todo esto formara parte del ejercicio (POR AHORA VA ACA PARA PRUEBAS)
-
-int potenciaElevada(int elevado, int base)
-{
-    if (elevado == 0)
-    {
-        return 1;
-    }
-    return base * potenciaElevada(--elevado, base);
-}
-
-int horner(char *clave) // funcion solo para strings (en int no hacer nada)
-{
-    unsigned long long claveConvertida = 0;
-    int largoPalabra = 0;
-
-    while (clave[largoPalabra] != '\0')
-    {
-        claveConvertida = claveConvertida + potenciaElevada(largoPalabra, 37) * clave[largoPalabra];
-        largoPalabra++;
-    }
-    return claveConvertida;
-}
-
-int funcionHash(char *clave) // RETORNA POS VALIDA DENTRO DEL HASH
-{
-    return horner(clave);
-}
-
-int main(int argc, char const *argv[])
-{
-    char *nombre = "ABC";
-    int clave = 0;
-    int promedio = 70; // calcularlo
-    int largo = 10;
-    HashCerrado<char*, int> *nuevo = new HashCerrado<char*, int>(largo, funcionHash);
-    nuevo->agregarElemento(nombre, promedio);
-
-    return 0;
-}

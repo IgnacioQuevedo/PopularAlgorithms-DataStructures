@@ -1,1 +1,1 @@
-Ingrese cantidad: 
+Ingrese cantidad PersonasNombre del EstudianteCant notas
