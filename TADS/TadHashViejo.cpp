@@ -3,10 +3,7 @@ using namespace std;
 //unsigned long long acumulado -->tipo para la clave.9
 // EL ORDEN IMPORTA SI VOS NO CONOCES EL LARGO TOTAL QUE REALIZARA ESA FUNCION, EJEMPLO VOS NO SABES CUANTAS VECES VAS A AGREGAR POR ENDE TE IMPORTA EL ORDEN, PERO EL ORDEN DE CALCULAR CLAVE
 // NO TE INTERESA DADO QUE YA CONOCES EL LARGO TOTAL QUE VAS A CALCULAR, POR ENDE COMO YA LO CONOCES NO TE IMPORTA. --> CONSTANTE
-
-//LA GRACIA DE USAR UNA CLASE, ES QUE NO SE NECESITA LLAMAR POR PARAMETRO SIEMPRE AL HASH, DADO QUE AL
-//SER UNA CLASE, LA PUEDO LLAMAR EN TODO EL ARCHIVO SIN NECESIDAD DE IR PASANDOME EL HASH COMO PARAMETRO.
-//CON UTILIZAR THIS->LoQueMeInteresa YA QUEDA.
+//LA GRACIA DE USAR UNA CLASE, ES QUE NO SE NECESITA LLAMAR POR PARAMETRO
 
 class nodoHash{ //CLASE DE LOS ELEMENTOS QUE VAN EN LA TABLAHASH, AL DEFINIRL LA LISTA SE CREA EL NODOHASH.
     public: //STRUCT (ME DEFINE LA ESTRUCTURA DE MI NODOHASH)
@@ -93,8 +90,6 @@ class HashCerrado{ //LA BOLSA
         int cuadratica(int posOcupada) //SI OCURRE COLISION TE DA LA SIGUIENTE POSICION VACIA.
         { 
             //el largo primo me asegura que la cuadratica siempre encuentre una nueva posicion
-
-            int posLibre = 0;
             int i = 1;
 
             while(!libre(posOcupada))
@@ -102,6 +97,8 @@ class HashCerrado{ //LA BOLSA
                 posOcupada = funcionHash(posOcupada + potenciaElevada(2,i)); //NUEVA POSICION A ESTUDIAR
                 i++;
             }
+            
+            return posOcupada;
         }
 
 
@@ -133,7 +130,7 @@ class HashCerrado{ //LA BOLSA
             else{
                 int posLibre = cuadratica(pos); //A IMPLEMENTAR, ACTUALIZO EL POS CON UNO NUEVO
                 nodoHash* elementoNuevo = new nodoHash(clave,dato);
-                this->Tablahash[pos] = elementoNuevo;  
+                this->Tablahash[posLibre] = elementoNuevo;  
                 this->cantElementos++;
             }
         }
@@ -210,9 +207,16 @@ class HashCerrado{ //LA BOLSA
 int main(int argc, char const *argv[])
 {
     int a =0;
-    HashCerrado* miHash= new HashCerrado(7);  //SI NO TENES EL PUNTERO NO HAY FORMA DE LLEGAR A LA "BOLSA" QUE SERÍA MI HASH
-    miHash->agregarElemento("hola",2);
-    //int a = sistema.sigPrimo(5);
+    HashCerrado* miHash= new HashCerrado(10);  //SI NO TENES EL PUNTERO NO HAY FORMA DE LLEGAR A LA "BOLSA" QUE SERÍA MI HASH
+    miHash->agregarElemento("ABC",2);
+    miHash->agregarElemento("ABB",3);
+    miHash->agregarElemento("DBC",2);
+    miHash->agregarElemento("BBC",2);
+    miHash->agregarElemento("CAC",2);
+    miHash->agregarElemento("FBC",2);
+    miHash->agregarElemento("ABS",2);
+    miHash->agregarElemento("SCA",2);
+    miHash->agregarElemento("SSC",2);
     return a;
 }
 
