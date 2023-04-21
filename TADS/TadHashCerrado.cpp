@@ -77,7 +77,7 @@ private:
         // el largo primo asegura que la cuadratica siempre encuentre una nueva pos
         int i = 1;
 
-        while (!libre(posOcupada))
+        while (!libre(posOcupada) && posOcupada<=this->largoEsperado)
         {
             posOcupada = (posOcupada + potenciaElevada(2, i)); // NUEVA POSICION A ESTUDIAR
             i++;
@@ -155,5 +155,5 @@ public:
         delete[] this->Tablahash; // UNA VEZ VACIA BORRO LA TABLA HASH
     }
 
-    // Métodos para buscar y eliminar elementos del hash
+    // Método eliminar elementos del hash
 };
