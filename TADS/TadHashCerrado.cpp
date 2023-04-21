@@ -23,7 +23,7 @@ private:
     nodoHash<K, V> **Tablahash;
     int cantElementos;
     int largoEsperado;
-    int (*funcionHash)(K);
+    unsigned long long (*funcionHash)(K);
 
     bool esPrimo(int largoEsperado)
     {
@@ -51,13 +51,13 @@ private:
         return largoEsperado;
     }
 
-    int potenciaElevada(int elevado, int base)
+    int potenciaElevada(int base, int elevado)
     {
         if (elevado == 0)
         {
             return 1;
         }
-        return base * potenciaElevada(--elevado, base);
+        return base * potenciaElevada(base, --elevado);
     }
 
     bool libre(int pos)
@@ -76,18 +76,18 @@ private:
     {
         // el largo primo asegura que la cuadratica siempre encuentre una nueva pos
         int i = 1;
-
-        while (!libre(posOcupada) && posOcupada<=this->largoEsperado)
+        int posFinal = 0;
+        while (!libre(posFinal) && posFinal <= this->largoEsperado)
         {
-            posOcupada = (posOcupada + potenciaElevada(2, i)); // NUEVA POSICION A ESTUDIAR
+
+            posFinal = posOcupada + potenciaElevada(i, 2); // NUEVA POSICION A ESTUDIAR, I ELEVADO A LA 2
             i++;
         }
-
-        return posOcupada;
+        return posFinal;
     }
 
 public:
-    HashCerrado(int largoEsperado1, int (*funcionHash)(K))
+    HashCerrado(int largoEsperado1, unsigned long long (*funcionHash)(K))
     {
         this->largoEsperado = sigPrimo(largoEsperado1);
         this->Tablahash = new nodoHash<K, V> *[largoEsperado];
@@ -120,27 +120,35 @@ public:
     }
 
     // CAMBIAR ESTUDIANTE, POR DATO Y PROMEDIO POR DATO2
-    int buscar(K estudiante)
+    V buscar(K estudiante)
     {
-
-        int pos = 0;
+        int i = 1;
         bool encontre = false;
-        pos = (this->funcionHash(estudiante)) % this->largoEsperado;
-
-        if (this->Tablahash[pos]->clave == estudiante)
-        {
-            encontre = true;
-        }
+        int posOriginal = (this->funcionHash(estudiante)) % this->largoEsperado; // POS ORIGINAL
+        int posBuscada = posOriginal; //Al ppio la pos original sera la buscada.En el caso que no sea, sera modificada mediante la cuadratica
         while (!encontre)
         {
-            pos = cuadratica(pos);
-            if (this->Tablahash[pos]->clave == estudiante)
+            
+            K prueba =  Tablahash[posBuscada]->clave;
+
+            if (this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
             {
-                encontre;
+                encontre = true;
+            }
+
+            else
+            {
+                posBuscada = posOriginal + potenciaElevada(2, i); //ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
+                i++;
+            }
+
+            if (posBuscada > this->largoEsperado)
+            { // SIGNIFICA QUE NO LO ENCONTRÉ
+                return -1;
             }
         }
 
-        return Tablahash[pos]->dato;
+        return Tablahash[posBuscada]->dato;
     }
 
     void destruir()
@@ -157,3 +165,5 @@ public:
 
     // Método eliminar elementos del hash
 };
+
+

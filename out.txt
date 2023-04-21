@@ -1,1 +1,14 @@
-Ingrese cantidad PersonasNombre del EstudianteCant notasngrese Notagrese Notarese Notaese NotaNombre del EstudianteCant notasngrese Notagrese Notarese NotaNombre del EstudianteCant notasngrese Notagrese Notarese Notaese Notase Nota404040
+Ingrese cantidad Personas
+Nombre del Estudiante
+Cant notas
+Ingrese Nota 0
+Ingrese Nota 1
+Ingrese Nota 2
+Ingrese Nota 3
+Nombre del Estudiante
+Cant notas
+Ingrese Nota 0
+Ingrese Nota 1
+Ingrese Nota 2
+Nombre del Estudiante
+Cant notas
