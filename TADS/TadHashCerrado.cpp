@@ -76,11 +76,11 @@ private:
     {
         // el largo primo asegura que la cuadratica siempre encuentre una nueva pos
         int i = 1;
-        int posFinal = 0;
+        int posFinal = posOcupada;
         while (!libre(posFinal) && posFinal <= this->largoEsperado)
         {
 
-            posFinal = posOcupada + potenciaElevada(i, 2); // NUEVA POSICION A ESTUDIAR, I ELEVADO A LA 2
+            posFinal = (posOcupada + potenciaElevada(i, 2)) % this->largoEsperado; // NUEVA POSICION A ESTUDIAR, I ELEVADO A LA 2
             i++;
         }
         return posFinal;
@@ -92,7 +92,7 @@ public:
         this->largoEsperado = sigPrimo(largoEsperado1);
         this->Tablahash = new nodoHash<K, V> *[largoEsperado];
         this->cantElementos = 0;
-        for (int i = 0; i < largoEsperado; i++)
+        for (int i = 0; i <largoEsperado; i++)
         {
             Tablahash[i] = NULL;
         }
@@ -125,25 +125,21 @@ public:
         int i = 1;
         bool encontre = false;
         int posOriginal = (this->funcionHash(estudiante)) % this->largoEsperado; // POS ORIGINAL
-        int posBuscada = posOriginal; //Al ppio la pos original sera la buscada.En el caso que no sea, sera modificada mediante la cuadratica
-        while (!encontre)
+        int posBuscada = posOriginal;                                            // Al ppio la pos original sera la buscada.En el caso que no sea, sera modificada mediante la cuadratica
+        while (!encontre && posBuscada <= this->largoEsperado)
         {
-            
-            K prueba =  Tablahash[posBuscada]->clave;
-
-            if (this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
+            if (this->Tablahash[posBuscada] && this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
             {
                 encontre = true;
             }
-
             else
             {
-                posBuscada = posOriginal + potenciaElevada(2, i); //ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
+                posBuscada = (posOriginal + potenciaElevada(2, i)) % this->largoEsperado; // ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
                 i++;
             }
 
             if (posBuscada > this->largoEsperado)
-            { // SIGNIFICA QUE NO LO ENCONTRÉ
+            { 
                 return -1;
             }
         }
@@ -165,5 +161,3 @@ public:
 
     // Método eliminar elementos del hash
 };
-
-

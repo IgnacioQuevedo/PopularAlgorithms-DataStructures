@@ -101,7 +101,6 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < cantPersonas; i++)
     {
-
         if (miHash->buscar(estudiantes[i]) == -1)
         {
             cout << "La persona no esta registrada" << endl;

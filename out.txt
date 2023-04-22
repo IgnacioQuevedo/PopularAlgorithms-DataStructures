@@ -12,3 +12,11 @@ Ingrese Nota 1
 Ingrese Nota 2
 Nombre del Estudiante
 Cant notas
+Ingrese Nota 0
+Ingrese Nota 1
+Ingrese Nota 2
+Ingrese Nota 3
+Ingrese Nota 4
+40
+100
+80
