@@ -1,50 +1,48 @@
 #include <iostream>
 using namespace std;
 
+class nodoLista
+{
+public:
+    char* dato;
+    nodoLista *sig;
 
-template <class T>
-
-class nodoLista{
-    public:
-    T dato;
-    nodoLista* sig;
-    
-    nodoLista(T dato){
+    nodoLista(char* dato)
+    {
         this->dato = dato;
         this->sig = NULL;
     }
 };
 
-template <class T>
-class Lista{
+class Lista
+{
 
-    private:
-    nodoLista<T>*ppio;
-    nodoLista<T>*fin;
+private:
+    nodoLista* ppio;
+    nodoLista* fin;
     int cantElem;
 
-    public:
-
-    Lista(){
+public:
+    Lista()
+    {
         this->ppio = NULL;
         this->fin = NULL;
         this->cantElem = 0;
     }
 
-    public:
+    void agregarElem(char* dato)
+    {
 
-     agregarElem(T dato){
-        if(this->ppio == NULL){
-
-            nodoLista<T>* elem = new nodoLista(dato);
-            elem->sig = NULL;
+        if (this->ppio == NULL)
+        {
+            nodoLista* elem = new nodoLista(dato);
             this->ppio = elem;
             this->fin = elem;
             this->cantElem++;
         }
-        else{
-            nodoLista<T>* elem = new NodoLista(dato);
-            elem->sig = NULL;
+        else
+        {
+            nodoLista* elem = new nodoLista(dato);
             this->fin->sig = elem;
             this->fin = elem;
             this->cantElem++;
@@ -52,41 +50,11 @@ class Lista{
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main(int argc, char const *argv[])
 {
-    Lista nuevo = new Lista(1) 
-    return 0;
+
+    HashCerrado* nuevo = new HashCerrado(3);
+    nuevo->agregarElemento("hola",60);
+
+return 0;
 }
