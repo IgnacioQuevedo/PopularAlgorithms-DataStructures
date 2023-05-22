@@ -71,8 +71,8 @@ private:
 
             // CASO BORDE QUE ESTES EN EL ARBOL DONDE LA DER ES NULA
 
-            if (this->tope == pos * 2 + 2)
-            { // SI TU TOPE ES TU HIJO DERECHO SIGNIFICA QUE TU ULTIMO HIJO ES EL IZQ, YA QUE IZQ SIEMPRE TENES
+            if (this->tope == pos * 2 + 1)
+            { // SI TU TOPE ES TU HIJO IZQ SIGNIFICA QUE TU ULTIMO HIJO ES EL IZQ, ENTONCES NO TENES DERECHO
 
                 if (this->vecNodoHeap[pos]->prioridad > this->vecNodoHeap[pos * 2 + 1]->prioridad) // EN CASO QUE MI PADRE ES MAS GRANDE QUE MI UNICO HIJO (IZQ)
                 {
@@ -134,8 +134,8 @@ public:
         }
 
         delete this->vecNodoHeap[0];
-        this->vecNodoHeap[0] = this->vecNodoHeap[tope-1]; //NO SERIA TOPE-1?? VER CON GONCHI
-        delete this->vecNodoHeap[tope-1];
+        this->vecNodoHeap[0] = this->vecNodoHeap[tope]; //NO SERIA TOPE-1?? VER CON GONCHI
+        delete this->vecNodoHeap[tope];
         this->tope--;
         hundir(0);
     }
