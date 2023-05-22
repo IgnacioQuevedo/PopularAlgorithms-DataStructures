@@ -32,7 +32,11 @@ private:
     int largoDado;
 
 public:
+<<<<<<< HEAD
     Avl(int largoDado)
+=======
+    Avl(T dato, int largoDado)
+>>>>>>> a8cf741f94b828417928eca950b9f0d69dc9803c
     {
         this->arbol = NULL;
         this->largoDado = largoDado;

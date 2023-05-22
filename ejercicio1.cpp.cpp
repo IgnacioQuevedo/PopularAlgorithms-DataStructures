@@ -13,6 +13,7 @@ int potenciaElevada(int base, int elevado)
     return base * potenciaElevada(base, --elevado);
 }
 
+<<<<<<< HEAD
 //TIENE QUE IR ACA, PORQUE SINO EL TAD HASH NO ES GENERICO, DEPENDIENDO DE LO QUE QUIERA GUARDAR EL USUARIO,
 //LA FUNCION HASH VA A UTILIZAR HORNER O NO. 
 //ENTONCES SI GUARDO PALABRAS PRECISO DE UN HORNER PARA TRANSFORMAR LA PALABRA A INT, Y RECIEN AHI PODER CONSEGUIR LA CUBETA
@@ -51,6 +52,38 @@ char *copia(const char *nombre)
     int largo = i + 1;
     char *copia = new char[largo + 1];
 
+=======
+unsigned long long horner(char *clave) // funcion solo para strings (en int no hacer nada)
+{
+    unsigned long long claveConvertida = 0;
+    int largoPalabra = 0;
+
+    while (clave[largoPalabra] != '\0')
+    {
+        claveConvertida = claveConvertida + potenciaElevada(37, largoPalabra) * clave[largoPalabra];
+        largoPalabra++;
+    }
+    return claveConvertida;
+}
+
+unsigned long long funcionHash(char *clave) // RETORNA POS VALIDA DENTRO DEL HASH
+{
+    unsigned long long pos = 0;
+    pos = horner(clave);
+    return pos;
+}
+
+char *copia(const char *nombre)
+{
+    int i = 0;
+    while (nombre[i] != '\0')
+    {
+        i++;
+    }
+    int largo = i + 1;
+    char *copia = new char[largo + 1];
+
+>>>>>>> a8cf741f94b828417928eca950b9f0d69dc9803c
     int n = 0;
     while (nombre[n] != '\0')
     {

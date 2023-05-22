@@ -128,7 +128,11 @@ public:
         int posBuscada = posOriginal;                                            // Al ppio la pos original sera la buscada.En el caso que no sea, sera modificada mediante la cuadratica
         while (!encontre && posBuscada <= this->largoEsperado)
         {
+<<<<<<< HEAD
             if (this->Tablahash[posBuscada] != NULL && this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
+=======
+            if (this->Tablahash[posBuscada] && this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
+>>>>>>> a8cf741f94b828417928eca950b9f0d69dc9803c
             {
                 encontre = true;
             }
