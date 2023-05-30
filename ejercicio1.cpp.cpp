@@ -1,10 +1,11 @@
 // HASH CERRADO, ORDENAMIENTO MEDIANTE FUNCION CUADRATICA
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "./TADS/TadHashCerrado.cpp"
 using namespace std;
 
-int potenciaElevada(int base, int elevado)
+int potenciaElevada(int base, int elevado) //PORQUE LA USA EL HORNER
 {
     if (elevado == 0)
     {
@@ -12,6 +13,7 @@ int potenciaElevada(int base, int elevado)
     }
     return base * potenciaElevada(base, --elevado);
 }
+
 
 //TIENE QUE IR ACA, PORQUE SINO EL TAD HASH NO ES GENERICO, DEPENDIENDO DE LO QUE QUIERA GUARDAR EL USUARIO,
 //LA FUNCION HASH VA A UTILIZAR HORNER O NO. 
@@ -21,7 +23,7 @@ int potenciaElevada(int base, int elevado)
 //ENTONCES HORNER Y FHASH TIENEN QUE IR EN LA IMPLE DEL USUARIO. YA QUE LA FHASH SE COMPORTA DISTINTO
 //DEPENDIENDO DEL TIPO DE DATO QUE GUARDE.
 
-unsigned long long horner(char *clave) // funcion solo para strings (en int no hacer nada)
+unsigned long long horner(string clave) // funcion solo para strings (en int no hacer nada)
 {
     unsigned long long claveConvertida = 0;
     int posCaracter = 0;
@@ -34,36 +36,36 @@ unsigned long long horner(char *clave) // funcion solo para strings (en int no h
     return claveConvertida;
 }
 
-unsigned long long funcionHash(char *clave) // RETORNA POS VALIDA DENTRO DEL HASH
+unsigned long long funcionHash(string clave) // RETORNA POS VALIDA DENTRO DEL HASH
 {
     unsigned long long pos = 0;
     pos = horner(clave);
     return pos;
 }
 
-char *copia(const char *nombre)
-{
-    int i = 0;
-    while (nombre[i] != '\0')
-    {
-        i++;
-    }
-    int largo = i + 1;
-    char *copia = new char[largo + 1];
+// char *copia(const char *nombre)
+// {
+//     int i = 0;
+//     while (nombre[i] != '\0')
+//     {
+//         i++;
+//     }
+//     int largo = i + 1;
+//     char *copia = new char[largo + 1];
 
-    int n = 0;
-    while (nombre[n] != '\0')
-    {
-        copia[n] = nombre[n];
-        n++;
-        copia[n + 1] = '\0';
-    }
-    if (nombre[0] == '\0')
-    {
-        copia[0] = '\0';
-    }
-    return copia;
-}
+//     int n = 0;
+//     while (nombre[n] != '\0')
+//     {
+//         copia[n] = nombre[n];
+//         n++;
+//         copia[n + 1] = '\0';
+//     }
+//     if (nombre[0] == '\0')
+//     {
+//         copia[0] = '\0';
+//     }
+//     return copia;
+// }
 
 int main(int argc, char const *argv[])
 {
@@ -80,31 +82,31 @@ int main(int argc, char const *argv[])
     int cantNotas, notaActual = 0;
     char *nombre;
 
-    cout << "Ingrese cantidad Personas" << endl;
+    //cout << "Ingrese cantidad Personas" << endl;
     cin >> cantPersonas;
 
-    HashCerrado<char *, int> *miHash = new HashCerrado<char *, int>(cantPersonas, funcionHash);
+    HashCerrado <string,int> *miHash = new HashCerrado <string,int> (cantPersonas, funcionHash);
     char **estudiantes = new char *[cantPersonas];
 
     for (int i = 0; i < cantPersonas; i++)
     {
 
-        cout << "Nombre del Estudiante" << endl;
+        //cout << "Nombre del Estudiante" << endl;
         cin >> nombre;
-        cout << "Cant notas" << endl;
+        //cout << "Cant notas" << endl;
         cin >> cantNotas;
 
         for (int i = 0; i < cantNotas; i++)
         {
-            cout << ("Ingrese Nota ") << i << endl;
+          //  cout << ("Ingrese Nota ") << i << endl;
             cin >> notaActual;
             promedio = promedio + notaActual;
         }
 
         promedio = promedio / cantNotas;
-        miHash->agregarElemento(copia(nombre), promedio);
+        miHash->agregarElemento(nombre, promedio);
         promedio = 0;
-        estudiantes[i] = copia(nombre);
+        estudiantes[i] = nombre;
     }
 
     for (int i = 0; i < cantPersonas; i++)
@@ -115,7 +117,7 @@ int main(int argc, char const *argv[])
         }
         else
         {
-            cout << miHash->buscar(estudiantes[i]) << endl;
+            cout << estudiantes[i] << " " << miHash->buscar(estudiantes[i]) << endl;
         }
     }
 

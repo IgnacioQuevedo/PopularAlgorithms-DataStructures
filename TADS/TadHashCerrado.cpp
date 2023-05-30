@@ -51,7 +51,7 @@ private:
         return largoEsperado;
     }
 
-    int potenciaElevada(int base, int elevado)
+    int potenciaElevada(int base, int elevado) //PORQUE LA USA LA CUADRATICA
     {
         if (elevado == 0)
         {
