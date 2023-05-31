@@ -22,20 +22,20 @@ class HashCerrado
 private:
     nodoHash<K, V> **Tablahash;
     int cantElementos;
-    int largoEsperado;
+    int largo;
     unsigned long long (*funcionHash)(K);
 
-    bool esPrimo(int largoEsperado)
+    bool esPrimo(int largoDado)
     {
-        if (largoEsperado <= 1)
+        if (largoDado <= 1)
         {
             return false;
         }
         else
         {
-            for (int i = 2; i <= largoEsperado / 2; i++)
+            for (int i = 2; i <= largoDado / 2; i++)
             {
-                if (largoEsperado % i == 0)
+                if (largoDado % i == 0)
                 { // SI ESTO OCURRE ENTONCES EL NUM ES PAR
                     return false;
                 }
@@ -44,16 +44,16 @@ private:
         }
     }
 
-    int sigPrimo(int largoEsperado)
+    int sigPrimo(int largoDado)
     {
-        while (!esPrimo(++largoEsperado))
+        while (!esPrimo(++largoDado))
             ; // SI DA FALSE AUMENTA UNO, ENTONCES GENERA QUE SEA IMPAR
-        return largoEsperado;
+        return largoDado;
     }
 
     int potenciaElevada(int base, int elevado) //PORQUE LA USA LA CUADRATICA
     {
-        if (elevado == 0)
+        if (elevado <= 0)
         {
             return 1;
         }
@@ -77,22 +77,22 @@ private:
         // el largo primo asegura que la cuadratica siempre encuentre una nueva pos
         int i = 1;
         int posFinal = posOcupada;
-        while (!libre(posFinal) && posFinal <= this->largoEsperado)
+        while (!libre(posFinal) && posFinal <= this->largo)
         {
 
-            posFinal = (posOcupada + potenciaElevada(i, 2)) % this->largoEsperado; // NUEVA POSICION A ESTUDIAR, I ELEVADO A LA 2
+            posFinal = (posOcupada + potenciaElevada(i, 2)) % this->largo; // NUEVA POSICION A ESTUDIAR, I ELEVADO A LA 2
             i++;
         }
         return posFinal;
     }
 
 public:
-    HashCerrado(int largoEsperado1, unsigned long long (*funcionHash)(K))
+    HashCerrado(int largoDado, unsigned long long (*funcionHash)(K))
     {
-        this->largoEsperado = sigPrimo(largoEsperado1);
-        this->Tablahash = new nodoHash<K, V> *[largoEsperado];
+        this->largo = sigPrimo(largoDado);
+        this->Tablahash = new nodoHash<K, V> *[largo];
         this->cantElementos = 0;
-        for (int i = 0; i <largoEsperado; i++)
+        for (int i = 0; i <largo; i++)
         {
             Tablahash[i] = NULL;
         }
@@ -102,7 +102,7 @@ public:
     void agregarElemento(K clave, V dato)
     {
 
-        int pos = this->funcionHash(clave) % this->largoEsperado;
+        int pos = this->funcionHash(clave) % this->largo;
         if (libre(pos))
         {
             nodoHash<K, V> *elementoNuevo = new nodoHash<K, V>(clave, dato);
@@ -120,37 +120,30 @@ public:
     }
 
     // CAMBIAR ESTUDIANTE, POR DATO Y PROMEDIO POR DATO2
-    V buscar(K estudiante)
+    V elemento(K estudiante)
     {
         int i = 1;
         bool encontre = false;
-        int posOriginal = (this->funcionHash(estudiante)) % this->largoEsperado; // POS ORIGINAL
+        int posOriginal = (this->funcionHash(estudiante)) % this->largo; // POS ORIGINAL
         int posBuscada = posOriginal;                                            // Al ppio la pos original sera la buscada.En el caso que no sea, sera modificada mediante la cuadratica
-        while (!encontre && posBuscada <= this->largoEsperado)
+        while (!encontre && posBuscada <= this->largo)
         {
             if (this->Tablahash[posBuscada] != NULL && this->funcionHash(this->Tablahash[posBuscada]->clave) == this->funcionHash(estudiante))
             {
-                encontre = true;
+                return Tablahash[posBuscada]->dato;
             }
             else
             {
-                posBuscada = (posOriginal + potenciaElevada(2, i)) % this->largoEsperado; // ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
+                posBuscada = (posOriginal + potenciaElevada(2, i)) % this->largo; // ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
                 i++;
             }
-
-            if (posBuscada > this->largoEsperado)
-            { 
-                return -1;
-            }
         }
-
-        return Tablahash[posBuscada]->dato;
     }
 
     void destruir()
     {
 
-        for (int i = 0; i < this->largoEsperado; i++)
+        for (int i = 0; i < this->largo; i++)
         {
             delete this->Tablahash[i];
             this->cantElementos--;

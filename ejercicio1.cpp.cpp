@@ -5,7 +5,7 @@
 #include "./TADS/TadHashCerrado.cpp"
 using namespace std;
 
-int potenciaElevada(int base, int elevado) //PORQUE LA USA EL HORNER
+unsigned long long potenciaElevada(int base, int elevado) //PORQUE LA USA EL HORNER
 {
     if (elevado == 0)
     {
@@ -43,29 +43,6 @@ unsigned long long funcionHash(string clave) // RETORNA POS VALIDA DENTRO DEL HA
     return pos;
 }
 
-// char *copia(const char *nombre)
-// {
-//     int i = 0;
-//     while (nombre[i] != '\0')
-//     {
-//         i++;
-//     }
-//     int largo = i + 1;
-//     char *copia = new char[largo + 1];
-
-//     int n = 0;
-//     while (nombre[n] != '\0')
-//     {
-//         copia[n] = nombre[n];
-//         n++;
-//         copia[n + 1] = '\0';
-//     }
-//     if (nombre[0] == '\0')
-//     {
-//         copia[0] = '\0';
-//     }
-//     return copia;
-// }
 
 int main(int argc, char const *argv[])
 {
@@ -80,13 +57,13 @@ int main(int argc, char const *argv[])
 
     int cantPersonas, promedio = 0;
     int cantNotas, notaActual = 0;
-    char *nombre;
+    string nombre;
 
     //cout << "Ingrese cantidad Personas" << endl;
     cin >> cantPersonas;
 
     HashCerrado <string,int> *miHash = new HashCerrado <string,int> (cantPersonas, funcionHash);
-    char **estudiantes = new char *[cantPersonas];
+    string *estudiantes = new string [cantPersonas];
 
     for (int i = 0; i < cantPersonas; i++)
     {
@@ -111,15 +88,8 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < cantPersonas; i++)
     {
-        if (miHash->buscar(estudiantes[i]) == -1)
-        {
-            cout << "La persona no esta registrada" << endl;
-        }
-        else
-        {
-            cout << estudiantes[i] << " " << miHash->buscar(estudiantes[i]) << endl;
-        }
+        cout << estudiantes[i] << " " << miHash->elemento(estudiantes[i]) << endl;
+ 
     }
-
-    return 0;
+    return 0; 
 }
