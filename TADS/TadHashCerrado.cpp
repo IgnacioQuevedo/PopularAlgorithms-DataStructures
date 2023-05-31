@@ -101,17 +101,7 @@ public:
 
     void agregarElemento(K clave, V dato)
     {
-        int camejito = 0;
         int pos = this->funcionHash(clave) % this->largo;
-        if(clave == "PFQrniysdhzPojhjhgiar"){
-            camejito++;
-        }
-        if(clave == "NLFervlzhaaTrjogcqweajjrevz"){
-            camejito++;
-        }
-        if(pos == 69){
-            camejito++;
-        }
         if (libre(pos))
         {
             nodoHash<K, V> *elementoNuevo = new nodoHash<K, V>(clave, dato);
@@ -131,7 +121,6 @@ public:
     // CAMBIAR ESTUDIANTE, POR DATO Y PROMEDIO POR DATO2
     V elemento(K estudiante)
     {
-        int camejito = 0;
         int i = 0;
         bool encontre = false;
         int posOriginal = (this->funcionHash(estudiante)) % this->largo; // POS ORIGINAL
@@ -146,13 +135,6 @@ public:
             }
             else
             {   
-
-                if(i == 69){
-                    camejito++;
-                }
-                if(i==99){
-                    camejito++;
-                }
                 posBuscada = (posOriginal + potenciaElevada(i, 2)) % this->largo; // ESTILO CUADRATICA, PERO NO REPITIENDO HASTA ENCONTRAR UNA VACIA
                 i++;
             }
