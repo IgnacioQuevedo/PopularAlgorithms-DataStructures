@@ -34,7 +34,7 @@ private:
 
         if (pos == 0 || (this->vecNodoHeap[pos]->prioridad) <= (this->vecNodoHeap[(pos - 1) / 2]->prioridad))
         {           // Si el hijo es mas grande esta Ok.
-            return; // SI SON IGUALES GONCHI, EL PADRE QUEDA DONDE ESTÁ -->fijate ACA, EL PADRE E HIJO TIENEN LA MISMA PRIO, EL PADRE QUEDO EN EL MISMO LUGAR
+            return; 
         }
         else // Sino hago Swap
         {
@@ -209,15 +209,3 @@ public:
         return "no hay ninguno";
     }
 };
-
-// int main(int argc, char const *argv[])
-// {
-//     Heap<char> *miHeap = new Heap<char>(5);
-//     miHeap->encolar(6,'G');
-//     miHeap->encolar(0,'O');
-//     miHeap->encolar(1,'I');
-//     miHeap->encolar(5,'S');
-//     miHeap->encolar(9,'P');
-//     miHeap->desencolar();
-//     return 0;
-// }

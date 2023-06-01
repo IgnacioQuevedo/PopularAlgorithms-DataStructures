@@ -45,9 +45,6 @@ int main(int argc, char const *argv[])
 
     while (!miHeap->esVacia())
     {
-        bool primeroBF = false;
-        bool primero93N6 = false;
-        int tetonazo = 213123;
         promedioGrupo = miHeap->maximaPrioridad();
         viajeros = miHeap->datoMayPrio();
         miHeap->desencolar();
