@@ -94,8 +94,11 @@ class Lista {
             this->largo = 0;
         }
 
-        ~Lista(){
-            vaciarRec(ppio);
+        void destruirLista(){
+            vaciarRec(this->ppio);
+            this->ppio = NULL;
+            this->fin = NULL;
+            this->largo = 0;
         }
 
         void vaciar(){

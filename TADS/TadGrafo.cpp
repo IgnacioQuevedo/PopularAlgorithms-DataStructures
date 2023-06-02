@@ -1,35 +1,34 @@
 #include <iostream>
 #include <fstream> //borrarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!!!!!!!!!!
 #include "TadLista.cpp"
-#include "TadHeap.cpp"
 #define INF 9999
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
 //  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER E EN CUNENTA QUE SOLUCION ECHA ES BASTANATE ADECUABLE ADECUAR REGLAS USAR COLA PRIORIDAD AHORA PARA PODER IR ELIGIENDIO Y QUE TENGNA UN ORDE DE VLOG DE V HAY QUE SABER RAPIDO EL NUMERITO QUE HAYQ UE IR SACANDO VAMOS A IR AGGREGANDO LOS ERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOPLIGICO Y QUE TENG ALA RELGA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES RENES 2 PRIORRIDAES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO OSE A QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMEROQUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
 //  Creamos la clase Arista, que va a almacenar información sobre las aristas del grafo.
 
+template <class T>
 class Arista
 {
 public:
     int costo;
-    int conexion; // Viene a representar el lugar de destino. (si tenes Vertice 1-2, la conexion es 2.Vendria a ser la arista apuntando al destino)
+    T conexion;
     bool dirigido;
+    bool existe;
 
-    Arista(int conexion, int costo, bool dirigido, bool existe)
+    Arista(T conexion, int costo, bool dirigido, bool existe)
     {
         this->conexion = conexion;
         this->costo = costo;
         this->dirigido = dirigido;
         this->existe = existe;
-        // this->origen = origen;
     }
 
-    Arista()
+    Arista(T conexion)
     {
         this->costo = 0;
         this->existe = false;
-        // this->origen = -1;
-        this->conexion = -1;
+        this->conexion = conexion;
         this->dirigido = false;
     }
 };
@@ -40,10 +39,10 @@ class Grafo
 
 private:
     int cantVertices;
-    int tope;                   // la cantidad máxima de vértices que puede tener el grafo
-    T **vertices;               // vector que adentro tiene punteros a datos tipo T ("Vertice")
-    Lista<int> *lugaresLibres;  // vector con posiciones libres.
-    Lista<Arista *> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
+    int tope;                      // la cantidad máxima de vértices que puede tener el grafo
+    T **vertices;                  // vector que adentro tiene punteros a datos tipo T ("Vertice")
+    Lista<int> *lugaresLibres;     // vector con posiciones libres.
+    Lista<Arista<T> *> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
 
     int buscarPos(T vertice)
     {
@@ -64,7 +63,7 @@ public:
         this->tope = tope;
         this->vertices = new T *[tope];
         this->lugaresLibres = new Lista<int>(); // Creamos una lista que guarde los lugares libres
-        this->listaAdy = new Lista<Arista *> *[tope];
+        this->listaAdy = new Lista<Arista<T> *> *[tope];
         this->cantVertices = 0;
 
         for (int i = 0; i < tope; i++)
@@ -74,7 +73,7 @@ public:
 
         for (int i = 0; i < this->tope; i++)
         {
-            this->listaAdy[i] = new Lista<Arista *>(); // Seteo a null
+            this->listaAdy[i] = new Lista<Arista<T> *>(); // Seteo a null
         }
 
         for (int i = 0; i < tope; i++)
@@ -92,28 +91,55 @@ public:
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
-    agregarArista(T origen, T conexion, int costo, int dirigido, int existe)
+    void agregarArista(T origen, T conexion, int costo, int dirigido, bool existe)
     {
         int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista *arista = new Arista(conexion, costo, dirigido - 1, existe);
+        Arista<T> *arista = new Arista<T>(conexion, costo, dirigido, existe);
         this->listaAdy[posOrigen]->insertarPpio(arista);
     }
 
-    Lista<nodoHeap*> Dijkstra(T origen) //NODOHEAP* PUNTERO?
+    void borrarVertice(T dato)
+    {
+        int posBorrar = this->buscarPos(dato);
+        this->vertices[posBorrar] = NULL;
+        this->lugaresLibres->insertarPpio(posBorrar);
+        IteradorLista<Arista<T> *> *iter = this->listaAdy[posBorrar]->obtenerIterador(); // Me creo un iterador para recorrer la lista ("Las aristas")
+        Arista<T> *aBorrar = NULL;
+        // Para el borrado de las aristas                                                     // Representara la arista a borrar ("logicamente")
+        while (iter->hayElemento())
+        {
+            aBorrar = iter->obtenerElemento();
+            aBorrar->existe = false;
+            iter->avanzar();
+        }
+        aBorrar = NULL;
+        delete aBorrar;
+        delete iter;
+    }
+
+    void borrarArista(T origen, T destino)
     {
         int posOrigen = this->buscarPos(origen);
-        int *dist = new int[this->tope];
-        bool *vis = new bool[this->tope];
-        Heap<T>* miHeap = new Heap<T>(this->tope); //NO SERIA ARISTA*
-        Lista<nodoHeap*> retorno = new Lista<nodoHeap*>
-        for (int i = 0; i < this->tope; i++)
+        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la primera arista
+        bool borrado = false;
+        Arista<T> *aBorrar = NULL;
+        while (!borrado && iter->hayElemento())
         {
-            dist[i] = INF;
-            vis[i] = false;
+            aBorrar = iter->obtenerElemento(); // aBorrar es la arista obtenida
+            if (aBorrar->conexion == destino)
+            {
+                aBorrar->existe = false;
+                borrado = true;
+            }
         }
-
-        dist[posOrigen] = 0;
+        aBorrar = NULL;
+        delete aBorrar;
+        delete iter;
     }
+
+    
+
+
 };
 
 int main(int argc, char const *argv[])
@@ -127,4 +153,9 @@ int main(int argc, char const *argv[])
     miGrafo->agregarArista(1, 3, 7, 1, 1);
     miGrafo->agregarArista(2, 4, 9, 1, 1);
     miGrafo->agregarArista(3, 3, 22, 1, 1);
+    miGrafo->agregarArista(1, 5, 10, 1, 1);
+    miGrafo->borrarArista(3, 3);
+    miGrafo->borrarVertice(2);
+    miGrafo->borrarVertice(3);
+    miGrafo->borrarVertice(4);
 }
