@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream> //borrarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!!!!!!!!!!
 #include "TadLista.cpp"
+#include "TadHeap.cpp"
 #define INF 9999
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
@@ -11,24 +12,22 @@ class Arista
 {
 public:
     int costo;
-    // int origen;
-    int conexion;
-    // bool existe;
+    int conexion; // Viene a representar el lugar de destino. (si tenes Vertice 1-2, la conexion es 2.Vendria a ser la arista apuntando al destino)
     bool dirigido;
 
-    Arista(int conexion, int costo, bool dirigido)
+    Arista(int conexion, int costo, bool dirigido, bool existe)
     {
         this->conexion = conexion;
         this->costo = costo;
         this->dirigido = dirigido;
-        // this->existe = existe;
+        this->existe = existe;
         // this->origen = origen;
     }
 
     Arista()
     {
         this->costo = 0;
-        // this->existe = false;
+        this->existe = false;
         // this->origen = -1;
         this->conexion = -1;
         this->dirigido = false;
@@ -43,7 +42,7 @@ private:
     int cantVertices;
     int tope;                   // la cantidad máxima de vértices que puede tener el grafo
     T **vertices;               // vector que adentro tiene punteros a datos tipo T ("Vertice")
-    Lista<int>* lugaresLibres;         // vector con posiciones libres.
+    Lista<int> *lugaresLibres;  // vector con posiciones libres.
     Lista<Arista *> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
 
     int buscarPos(T vertice)
@@ -93,11 +92,27 @@ public:
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
-    agregarArista(T origen, T conexion, int costo, int dirigido)
+    agregarArista(T origen, T conexion, int costo, int dirigido, int existe)
     {
         int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista *arista = new Arista(conexion, costo, dirigido);
+        Arista *arista = new Arista(conexion, costo, dirigido - 1, existe);
         this->listaAdy[posOrigen]->insertarPpio(arista);
+    }
+
+    Lista<nodoHeap*> Dijkstra(T origen) //NODOHEAP* PUNTERO?
+    {
+        int posOrigen = this->buscarPos(origen);
+        int *dist = new int[this->tope];
+        bool *vis = new bool[this->tope];
+        Heap<T>* miHeap = new Heap<T>(this->tope); //NO SERIA ARISTA*
+        Lista<nodoHeap*> retorno = new Lista<nodoHeap*>
+        for (int i = 0; i < this->tope; i++)
+        {
+            dist[i] = INF;
+            vis[i] = false;
+        }
+
+        dist[posOrigen] = 0;
     }
 };
 
@@ -108,8 +123,8 @@ int main(int argc, char const *argv[])
     miGrafo->agregarVertice(2);
     miGrafo->agregarVertice(3);
     miGrafo->agregarVertice(4);
-    miGrafo->agregarArista(1, 2, 10, 1);
-    miGrafo->agregarArista(1, 3, 7, 1);
-    miGrafo->agregarArista(2, 4, 9, 1);
-    miGrafo->agregarArista(3, 3, 22, 1);
+    miGrafo->agregarArista(1, 2, 10, 1, 1);
+    miGrafo->agregarArista(1, 3, 7, 1, 1);
+    miGrafo->agregarArista(2, 4, 9, 1, 1);
+    miGrafo->agregarArista(3, 3, 22, 1, 1);
 }
