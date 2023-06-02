@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include "nodoLista.cpp"
-#include "iteradorLista.cpp"
 using namespace std;
 
 template<class T>
@@ -12,6 +10,33 @@ class NodoLista {
 
         NodoLista(T dato) : dato(dato), sig(NULL), ant(NULL){}
         NodoLista(T dato, NodoLista<T> *ant, NodoLista<T> *sig): dato(dato), sig(sig), ant(ant){}
+};
+
+template <class T>
+class IteradorLista {
+    private:
+        NodoLista<T> *actual, *ppio;
+
+    public:
+        IteradorLista(NodoLista<T>* ppio){
+            this->actual = this->ppio = ppio;
+        }
+
+        bool hayElemento() {
+            return actual != NULL;
+        }
+
+        T obtenerElemento() {
+            return actual->dato;
+        }
+
+        void avanzar(){
+            actual = actual->sig;
+        }
+
+        void reiniciar(){
+            actual = ppio;
+        }
 };
 
 template<class T>
@@ -61,6 +86,13 @@ class Lista {
         }
 
     public:
+
+
+        Lista(){
+            this->ppio = NULL;
+            this->fin = NULL;
+            this->largo = 0;
+        }
 
         ~Lista(){
             vaciarRec(ppio);
