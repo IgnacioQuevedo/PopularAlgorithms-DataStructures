@@ -179,7 +179,7 @@ class Lista {
         }
 
         IteradorLista<T>* obtenerIterador(){
-            return new IteradorLista<T>(ppio);
+            return new IteradorLista<T>(this->ppio);
         }
 };
 

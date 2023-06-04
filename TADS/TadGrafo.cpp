@@ -1,11 +1,27 @@
 #include <iostream>
 #include <fstream> //borrarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!!!!!!!!!!
 #include "TadLista.cpp"
+#include "TadHeap.cpp"
 #define INF 9999
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
 //  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER E EN CUNENTA QUE SOLUCION ECHA ES BASTANATE ADECUABLE ADECUAR REGLAS USAR COLA PRIORIDAD AHORA PARA PODER IR ELIGIENDIO Y QUE TENGNA UN ORDE DE VLOG DE V HAY QUE SABER RAPIDO EL NUMERITO QUE HAYQ UE IR SACANDO VAMOS A IR AGGREGANDO LOS ERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOPLIGICO Y QUE TENG ALA RELGA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES RENES 2 PRIORRIDAES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO OSE A QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMEROQUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
 //  Creamos la clase Arista, que va a almacenar información sobre las aristas del grafo.
+
+template <class T>
+class nodoDobleDato
+{
+
+public:
+    T *vector;
+    int totalCostosDeAristas;
+
+    nodoDobleDato(T *vector, int totalCostosDeAristas)
+    {
+        this->vector = vector; // THIS->PRIORIDAD ("LA PRIO DEL HEAP SERÁ LA QUE ME PASEN POR PARAMETRO")
+        this->totalCostosDeAristas = totalCostosDeAristas;
+    }
+};
 
 template <class T>
 class Arista
@@ -101,26 +117,17 @@ public:
     void borrarVertice(T dato)
     {
         int posBorrar = this->buscarPos(dato);
+        delete this->vertices[posBorrar];
         this->vertices[posBorrar] = NULL;
+        this->cantVertices--;
         this->lugaresLibres->insertarPpio(posBorrar);
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posBorrar]->obtenerIterador(); // Me creo un iterador para recorrer la lista ("Las aristas")
-        Arista<T> *aBorrar = NULL;
-        // Para el borrado de las aristas                                                     // Representara la arista a borrar ("logicamente")
-        while (iter->hayElemento())
-        {
-            aBorrar = iter->obtenerElemento();
-            aBorrar->existe = false;
-            iter->avanzar();
-        }
-        aBorrar = NULL;
-        delete aBorrar;
-        delete iter;
+        this->listaAdy[posBorrar]->destruirLista(); // Te devuelve un puntero a la lista, y a esa lista llamas al destruir
     }
 
     void borrarArista(T origen, T destino)
     {
         int posOrigen = this->buscarPos(origen);
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la primera arista
+        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
         bool borrado = false;
         Arista<T> *aBorrar = NULL;
         while (!borrado && iter->hayElemento())
@@ -134,12 +141,116 @@ public:
         }
         aBorrar = NULL;
         delete aBorrar;
+        iter = NULL;
         delete iter;
     }
 
-    
+    nodoDobleDato<T> *DijkstraNacho(T origen, T destino)
+    {
+        int *dist = new int[this->tope];
+        bool *vis = new bool[this->tope];
+        int *ant = new int[this->tope];
 
+        Heap<T> *miHeap = new Heap<T>(this->tope); //El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
+        nodoDobleDato<T> *retorno = NULL; // Lo defino, pero aun sin nada
+        IteradorLista<Arista *> *iter = NULL;
+        int posOrigen = 0;
+        for (int i = 0; i < this->tope; i++)
+        {
+            dist[i] = INF;
+            vis[i] = false;
+            ant[i] = -1;
+        }
 
+        posOrigen = this->buscarPos(origen);
+        dist[posOrigen] = 0;
+        int nuevaDist = 0;
+        //vector[0] = origen; No va (Creo yo) Porque lo hago al final final del todo, en el while.
+        miHeap->encolar(origen);
+
+        for (int i = 0; i < this->tope; i++)
+        {
+            posOrigen = this->buscarPos(miHeap->datoMinPrio()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
+            iter = this->listaAdy[posOrigen];                   // Situo el iter en la lista de aristas del vertice especifico(posOrigen).
+            Arista<T> *aristaActual = NULL;                     // Será cada arista recorrida por el iter.
+
+            miHeap->desencolar(); //Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
+
+            while (iter->hayElemento())
+            {
+                aristaActual = iter->obtenerElemento(); // Consigo una de las arista del vertice particular.
+                nuevaDist = dist[posOrigen] + aristaActual->costo;
+                if (!vis[aristaActual->conexion] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) //Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
+                {
+                    miHeap->encolar(aristaActual->conexion);
+                    dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
+                    ant[aristaActual] = posOrigen;
+                }
+            }
+            vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
+        }
+
+        //AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
+
+        int i=0; 
+        T *vector = new T[this->cantVertices];             
+        vector[0] = destino;   
+        int posAnt = this->buscarPos(destino); //Es la posAnt del vertice anterior al de destino.
+
+        while(ant[posAnt] != -1){ //cuando sea -1 significa que sos el primero
+
+            vector[i] = this->vertices[posAnt]; // Esto quedaria asi [Destino, AntDestino, AntAntDestino,....,Origen]
+            posAnt = ant[posAnt]; //Actualizo la posAnt a la anterior de la misma.
+            i++; //Incremento para moverme a la siguiente posicion del vector a devolver.
+        }
+        retorno->vector = vector;
+        retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
+
+        return retorno;
+    }
+
+    nodoDobleDato<T> *DijkstraCamejin(T origen, T destino)
+    {
+        int posOrigen = this->buscarPos(origen);
+
+        int *dist = new int[this->tope];
+        bool *vis = new bool[this->tope];
+        Heap<T> *miHeap = new Heap<T>(this->tope);
+
+        T *vector = new T[this->cantVertices];                               // Vector con los vertices recorridos.
+        int sumaTotal = 0;                                                   // distancia total del recorrido de esos vertices.
+        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(vector, sumaTotal); // Lo de arriba va al constructor del nodoDobleDato
+
+        IteradorLista<Arista *> *iter = NULL;
+        for (int i = 0; i < this->tope; i++)
+        {
+            dist[i] = INF;
+            vis[i] = false;
+        }
+
+        dist[posOrigen] = 0;
+
+        while (!miHeap->esVacia)
+        {
+            // sumaTotal = sumaTotal + miNodoHeap->darPrioridad;
+            // vector[algo] = valor en pos;
+            miHeap->desencolar();
+
+            while (iter->hayElemento())
+            {
+                int posProxVertice = buscarPos(iter->obtenerElemento->destino);
+                int nuevaDistancia = dist[posProxVertice] + iter->obtenerElemento->costo;
+
+                if (nuevaDistancia < dist[i])
+                {
+                    dist[proxVertice] = nuevaDistancia;
+                    miHeap->encolar((iter->obtenerElemento())->conexion);
+                }
+            }
+        }
+
+        return retorno;
+    }
 };
 
 int main(int argc, char const *argv[])
@@ -156,6 +267,8 @@ int main(int argc, char const *argv[])
     miGrafo->agregarArista(1, 5, 10, 1, 1);
     miGrafo->borrarArista(3, 3);
     miGrafo->borrarVertice(2);
+    miGrafo->agregarVertice(3500);
     miGrafo->borrarVertice(3);
     miGrafo->borrarVertice(4);
-}
+    miGrafo->Dijkstra(3, 2);
+};
