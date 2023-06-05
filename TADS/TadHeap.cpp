@@ -28,13 +28,14 @@ private:
     int maxElem; // MAXIMA CANTIDAD POSIBLE
     int tope;    // CANT DE ELEMENTOS
     nodoHeap<T> **vecNodoHeap;
+    bool esMinHeap;
 
-    void flotar(int pos)
+    void flotarMax(int pos)
     {
 
         if (pos == 0 || (this->vecNodoHeap[pos]->prioridad) <= (this->vecNodoHeap[(pos - 1) / 2]->prioridad))
-        {           // Si el hijo es mas grande esta Ok.
-            return; 
+        { // Si el hijo es mas chico esta Ok.
+            return;
         }
         else // Sino hago Swap
         {
@@ -44,13 +45,44 @@ private:
             this->vecNodoHeap[pos] = aux;                              // el hijo pasa a ser el padre
             aux = NULL;
             delete aux;
-            flotar((pos - 1) / 2); // Repito con el nuevo padre.
+            flotarMax((pos - 1) / 2); // Repito con el nuevo padre.
+        }
+    }
+
+    void flotarMin(int pos)
+    {
+
+        if (pos == 0 || (this->vecNodoHeap[pos]->prioridad) >= (this->vecNodoHeap[(pos - 1) / 2]->prioridad))
+        { // Si el hijo es mas grande esta Ok.
+            return;
+        }
+        else // Sino hago Swap
+        {
+            nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[(pos - 1) / 2]->prioridad, this->vecNodoHeap[(pos - 1) / 2]->dato); // Me guardo el padre
+            delete this->vecNodoHeap[(pos - 1) / 2];
+            this->vecNodoHeap[(pos - 1) / 2] = this->vecNodoHeap[pos]; // el padre es el nuevo hijo
+            this->vecNodoHeap[pos] = aux;                              // el hijo pasa a ser el padre
+            aux = NULL;
+            delete aux;
+            flotarMin((pos - 1) / 2); // Repito con el nuevo padre.
         }
     }
 
     int max(int posIzq, int posDer)
     {
         if (this->vecNodoHeap[posIzq]->prioridad >= this->vecNodoHeap[posDer]->prioridad)
+        {
+            return posIzq;
+        }
+        else
+        {
+            return posDer;
+        }
+    }
+
+    int min(int posIzq, int posDer)
+    {
+        if (this->vecNodoHeap[posIzq]->prioridad <= this->vecNodoHeap[posDer]->prioridad)
         {
             return posIzq;
         }
@@ -125,12 +157,12 @@ private:
 
 public:
     // CREO EL HEAP
-    Heap(int maxElem)
+    Heap(int maxElem, bool esMinHeap)
     {
         this->maxElem = maxElem;
         this->tope = 0;
         this->vecNodoHeap = new nodoHeap<T> *[maxElem];
-
+        this->esMinHeap = esMinHeap;
         for (int i = 0; i <= maxElem; i++)
         {
             this->vecNodoHeap[i] = NULL;
@@ -139,11 +171,23 @@ public:
 
     void encolar(float prioridad, T dato)
     {
-        if (this->tope <= this->maxElem)
+        if (esMinHeap)
         {
-            this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
-            flotar(this->tope);
-            this->tope = tope + 1; // El tope aumenta porque añadi un elemento
+            if (this->tope <= this->maxElem)
+            {
+                this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
+                flotarMin(this->tope);
+                this->tope = tope + 1; // El tope aumenta porque añadi un elemento
+            }
+        }
+        else
+        {
+            if (this->tope <= this->maxElem)
+            {
+                this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
+                flotarMax(this->tope);
+                this->tope = tope + 1; // El tope aumenta porque añadi un elemento
+            }
         }
     }
 

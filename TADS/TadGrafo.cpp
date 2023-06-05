@@ -145,15 +145,16 @@ public:
         delete iter;
     }
 
-    nodoDobleDato<T> *DijkstraNacho(T origen, T destino)
+    nodoDobleDato<T>* Dijkstra(T origen, T destino)
     {
         int *dist = new int[this->tope];
         bool *vis = new bool[this->tope];
-        int *ant = new int[this->tope];
+        int *ant = new int[this->tope]; // realmente es necesario?
 
         Heap<T> *miHeap = new Heap<T>(this->tope); //El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
         nodoDobleDato<T> *retorno = NULL; // Lo defino, pero aun sin nada
-        IteradorLista<Arista *> *iter = NULL;
+
+        IteradorLista<Arista<T>*> *iter = NULL; // ARREGLO <T> //
         int posOrigen = 0;
         for (int i = 0; i < this->tope; i++)
         {
@@ -165,10 +166,10 @@ public:
         posOrigen = this->buscarPos(origen);
         dist[posOrigen] = 0;
         int nuevaDist = 0;
-        //vector[0] = origen; No va (Creo yo) Porque lo hago al final final del todo, en el while.
-        miHeap->encolar(origen);
+        //vector[0] = //Nachin: origen; No va (Creo yo) Porque lo hago al final final del todo, en el while. //Camejin: Toy de acuerdo
+        miHeap->encolar(nuevaDist, origen);
 
-        for (int i = 0; i < this->tope; i++)
+        for (int i = 0; i < this->tope; i++) // no seria cantvertices??!!!!!!!!!!!!
         {
             posOrigen = this->buscarPos(miHeap->datoMinPrio()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
             iter = this->listaAdy[posOrigen];                   // Situo el iter en la lista de aristas del vertice especifico(posOrigen).
@@ -194,7 +195,7 @@ public:
 
         int i=0; 
         T *vector = new T[this->cantVertices];             
-        vector[0] = destino;   
+        vector[0] = origen;   
         int posAnt = this->buscarPos(destino); //Es la posAnt del vertice anterior al de destino.
 
         while(ant[posAnt] != -1){ //cuando sea -1 significa que sos el primero
@@ -205,49 +206,6 @@ public:
         }
         retorno->vector = vector;
         retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
-
-        return retorno;
-    }
-
-    nodoDobleDato<T> *DijkstraCamejin(T origen, T destino)
-    {
-        int posOrigen = this->buscarPos(origen);
-
-        int *dist = new int[this->tope];
-        bool *vis = new bool[this->tope];
-        Heap<T> *miHeap = new Heap<T>(this->tope);
-
-        T *vector = new T[this->cantVertices];                               // Vector con los vertices recorridos.
-        int sumaTotal = 0;                                                   // distancia total del recorrido de esos vertices.
-        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(vector, sumaTotal); // Lo de arriba va al constructor del nodoDobleDato
-
-        IteradorLista<Arista *> *iter = NULL;
-        for (int i = 0; i < this->tope; i++)
-        {
-            dist[i] = INF;
-            vis[i] = false;
-        }
-
-        dist[posOrigen] = 0;
-
-        while (!miHeap->esVacia)
-        {
-            // sumaTotal = sumaTotal + miNodoHeap->darPrioridad;
-            // vector[algo] = valor en pos;
-            miHeap->desencolar();
-
-            while (iter->hayElemento())
-            {
-                int posProxVertice = buscarPos(iter->obtenerElemento->destino);
-                int nuevaDistancia = dist[posProxVertice] + iter->obtenerElemento->costo;
-
-                if (nuevaDistancia < dist[i])
-                {
-                    dist[proxVertice] = nuevaDistancia;
-                    miHeap->encolar((iter->obtenerElemento())->conexion);
-                }
-            }
-        }
 
         return retorno;
     }
@@ -263,12 +221,13 @@ int main(int argc, char const *argv[])
     miGrafo->agregarArista(1, 2, 10, 1, 1);
     miGrafo->agregarArista(1, 3, 7, 1, 1);
     miGrafo->agregarArista(2, 4, 9, 1, 1);
-    miGrafo->agregarArista(3, 3, 22, 1, 1);
-    miGrafo->agregarArista(1, 5, 10, 1, 1);
-    miGrafo->borrarArista(3, 3);
-    miGrafo->borrarVertice(2);
-    miGrafo->agregarVertice(3500);
-    miGrafo->borrarVertice(3);
-    miGrafo->borrarVertice(4);
-    miGrafo->Dijkstra(3, 2);
+    miGrafo->agregarArista(3, 4, 1, 1, 1);
+    //miGrafo->agregarArista(3, 3, 22, 1, 1);
+    //miGrafo->agregarArista(1, 5, 10, 1, 1);
+    //miGrafo->borrarArista(3, 3);
+    //miGrafo->borrarVertice(2);
+    //miGrafo->agregarVertice(3500);
+    //miGrafo->borrarVertice(3);
+    //miGrafo->borrarVertice(4);
+    miGrafo->Dijkstra(1, 4);
 };
