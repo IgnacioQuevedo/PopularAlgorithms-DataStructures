@@ -29,10 +29,10 @@ class Arista
 public:
     int costo;
     T conexion;
-    bool dirigido;
     bool existe;
+    bool dirigido;
 
-    Arista(T conexion, int costo, bool dirigido, bool existe)
+    Arista(T conexion, int costo,bool dirigido,bool existe)
     {
         this->conexion = conexion;
         this->costo = costo;
@@ -40,12 +40,13 @@ public:
         this->existe = existe;
     }
 
-    Arista(T conexion)
+    Arista(T conexion) //MEPA QUE AL PEDO
     {
-        this->costo = 0;
-        this->existe = false;
         this->conexion = conexion;
+        this->costo = 0;
         this->dirigido = false;
+        this->existe = false;
+        
     }
 };
 
@@ -107,11 +108,20 @@ public:
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
-    void agregarArista(T origen, T conexion, int costo, int dirigido, bool existe)
+    void agregarArista(T origen, T conexion, int costo, int dirigido, int existe)
     {
         int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista<T> *arista = new Arista<T>(conexion, costo, dirigido, existe);
-        this->listaAdy[posOrigen]->insertarPpio(arista);
+        Arista<T> *aristaSentido1 = new Arista<T>(conexion, costo,dirigido, existe);
+        if(dirigido){
+            this->listaAdy[posOrigen]->insertarPpio(aristaSentido1);
+        }
+        else{
+            Arista<T> *aristaSentido2 = new Arista<T>(origen, costo,dirigido, existe);
+            this->listaAdy[posOrigen]->insertarPpio(aristaSentido2); //Inserte la original
+            int posConexion = this->buscarPos(conexion);
+            this->listaAdy[posConexion]->insertarPpio(aristaSentido2);
+        }
+        
     }
 
     void borrarVertice(T dato)
@@ -138,6 +148,7 @@ public:
                 aBorrar->existe = false;
                 borrado = true;
             }
+            iter->avanzar();
         }
         aBorrar = NULL;
         delete aBorrar;
@@ -174,8 +185,15 @@ public:
 
         for (int i = 0; i < this->cantVertices-1; i++) 
         {
+            if(i==2){
+                cout<<"Camejito";
+            }
             posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
             Arista<T> *aristaActual = NULL;                     // Será cada arista recorrida por el iter.
+            
+            if(posOrigen == -1){
+                break;
+            }
             iter = this->listaAdy[posOrigen]->obtenerIterador();
            
             miHeap->desencolar(); //Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
@@ -214,23 +232,23 @@ public:
     }
 };
 
-int main(int argc, char const *argv[])
-{
-    Grafo<int> *miGrafo = new Grafo<int>(5);
-    miGrafo->agregarVertice(1);
-    miGrafo->agregarVertice(2);
-    miGrafo->agregarVertice(3);
-    miGrafo->agregarVertice(4);
-    miGrafo->agregarArista(1, 2, 10, 1, 1);
-    miGrafo->agregarArista(1, 3, 7, 1, 1);
-    miGrafo->agregarArista(2, 4, 9, 1, 1);
-    miGrafo->agregarArista(3, 4, 1, 1, 1);
-    //miGrafo->agregarArista(3, 3, 22, 1, 1);
-    //miGrafo->agregarArista(1, 5, 10, 1, 1);
-    //miGrafo->borrarArista(3, 3);
-    //miGrafo->borrarVertice(2);
-    //miGrafo->agregarVertice(3500);
-    //miGrafo->borrarVertice(3);
-    //miGrafo->borrarVertice(4);
-    miGrafo->Dijkstra(1, 4);
-};
+// int main(int argc, char const *argv[])
+// {
+//     Grafo<int> *miGrafo = new Grafo<int>(5);
+//     miGrafo->agregarVertice(1);
+//     miGrafo->agregarVertice(2);
+//     miGrafo->agregarVertice(3);
+//     miGrafo->agregarVertice(4);
+//     miGrafo->agregarArista(1, 2, 10, 1, 1);
+//     miGrafo->agregarArista(1, 3, 7, 1, 1);
+//     miGrafo->agregarArista(2, 4, 9, 1, 1);
+//     miGrafo->agregarArista(3, 4, 1, 1, 1);
+//     //miGrafo->agregarArista(3, 3, 22, 1, 1);
+//     //miGrafo->agregarArista(1, 5, 10, 1, 1);
+//     //miGrafo->borrarArista(3, 3);
+//     //miGrafo->borrarVertice(2);
+//     //miGrafo->agregarVertice(3500);
+//     //miGrafo->borrarVertice(3);
+//     //miGrafo->borrarVertice(4);
+//     miGrafo->Dijkstra(1, 4);
+// };
