@@ -290,6 +290,7 @@ public:
     float prioridadTope()
     {
         return (this->vecNodoHeap[0])->prioridad;
+
     }
 
     T topDato()

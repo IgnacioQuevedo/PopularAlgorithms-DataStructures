@@ -117,7 +117,7 @@ public:
         }
         else{
             Arista<T> *aristaSentido2 = new Arista<T>(origen, costo,dirigido, existe);
-            this->listaAdy[posOrigen]->insertarPpio(aristaSentido2); //Inserte la original
+            this->listaAdy[posOrigen]->insertarPpio(aristaSentido1); //Inserte la original
             int posConexion = this->buscarPos(conexion);
             this->listaAdy[posConexion]->insertarPpio(aristaSentido2);
         }
@@ -127,31 +127,46 @@ public:
     void borrarVertice(T dato)
     {
         int posBorrar = this->buscarPos(dato);
+        IteradorLista<Arista<T> *> *iter = this->listaAdy[posBorrar]->obtenerIterador();
+        //bouza : tema ordenes
+        while(iter->hayElemento()){
+            borrarArista(dato, iter->obtenerElemento()->conexion);
+            iter->avanzar();
+        
+        }
+        iter = NULL;
+        delete iter;
         delete this->vertices[posBorrar];
         this->vertices[posBorrar] = NULL;
         this->cantVertices--;
         this->lugaresLibres->insertarPpio(posBorrar);
-        this->listaAdy[posBorrar]->destruirLista(); // Te devuelve un puntero a la lista, y a esa lista llamas al destruir
     }
 
     void borrarArista(T origen, T destino)
     {
         int posOrigen = this->buscarPos(origen);
         IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
-        bool borrado = false;
-        Arista<T> *aBorrar = NULL;
-        while (!borrado && iter->hayElemento())
+        
+        if(origen == 2 && destino == 1){
+            int pitos = 0;
+        }
+        //caso base recursion
+        if(!iter->obtenerElemento()->existe){
+            return;
+        }
+
+        while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
         {
-            aBorrar = iter->obtenerElemento(); // aBorrar es la arista obtenida
-            if (aBorrar->conexion == destino)
-            {
-                aBorrar->existe = false;
-                borrado = true;
-            }
+
+            T pedito = iter->obtenerElemento()->conexion;
             iter->avanzar();
         }
-        aBorrar = NULL;
-        delete aBorrar;
+        // SI ESTAMOS PARADOS ACA ES PORQUE ENCONTRAMOS LA ARISTA
+        iter->obtenerElemento()->existe = false;
+        if(!iter->obtenerElemento()->dirigido && !iter->obtenerElemento()->existe){
+
+            borrarArista(destino, origen);
+        }
         iter = NULL;
         delete iter;
     }
@@ -183,17 +198,10 @@ public:
         miHeap->encolar(nuevaDist, origen);
         IteradorLista<Arista<T>*>* iter =this->listaAdy[posOrigen]->obtenerIterador();
 
-        for (int i = 0; i < this->cantVertices-1; i++) 
+        for (int i = 0; i < this->cantVertices-1; i++)
         {
-            if(i==2){
-                cout<<"Camejito";
-            }
             posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
             Arista<T> *aristaActual = NULL;                     // Será cada arista recorrida por el iter.
-            
-            if(posOrigen == -1){
-                break;
-            }
             iter = this->listaAdy[posOrigen]->obtenerIterador();
            
             miHeap->desencolar(); //Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
