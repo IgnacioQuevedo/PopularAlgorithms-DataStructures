@@ -92,7 +92,7 @@ private:
         }
     }
 
-    void hundir(int pos)
+    void hundirMax(int pos)
     {
         // POS ES EL PADRE
         //  TENES PADRE, TENES UN HIJO IZQ, O TENES IZQ Y DER.
@@ -145,7 +145,70 @@ private:
                     this->vecNodoHeap[posHijoGrande] = aux;
                     aux = NULL;
                     delete aux;
-                    hundir(posHijoGrande); // LLAMAS A LA RECURSION
+                    hundirMax(posHijoGrande); // LLAMAS A LA RECURSION
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    void hundirMin(int pos)
+    {
+        // POS ES EL PADRE
+        //  TENES PADRE, TENES UN HIJO IZQ, O TENES IZQ Y DER.
+        //  YA LLEGASTE AL ULTIMO HIJO, ENTONCES CORTAS
+
+        if (this->tope == pos)
+        { // SI LLEGASTE AL FINAL
+            return;
+        }
+        else
+        {
+            // HAY DOS CASOS
+            // CASO EN QUE TU HIJO DER ES NULO
+            // CASO EN QUE TENES HIJO DER E HIJO IZQ
+
+            // CASO BORDE QUE ESTES EN EL ARBOL DONDE LA DER ES NULA
+
+            if (this->tope == pos * 2 + 2)
+            { // SI TU TOPE ES TU HIJO DER SIGNIFICA QUE TU ULTIMO HIJO ES EL IZQ, ENTONCES NO TENES DERECHO. (YA QUE TOPE SIEMPRE APUNTA A LA POS SIGUIENTE DE TU ULTIMO NODO)
+
+                if (this->vecNodoHeap[pos]->prioridad > this->vecNodoHeap[pos * 2 + 1]->prioridad) // EN CASO QUE MI PADRE ES MAS GRANDE QUE MI UNICO HIJO (IZQ)
+                {
+                    // SWAP
+                    nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[pos]->prioridad, this->vecNodoHeap[pos]->dato);
+                    delete this->vecNodoHeap[pos];
+                    this->vecNodoHeap[pos] = this->vecNodoHeap[2 * pos + 1];
+                    this->vecNodoHeap[2 * pos + 1] = aux;
+                    aux = NULL;
+                    delete aux;
+                }
+                else
+                {
+                    return; // ES PORQUE MI PADRE ES MAS GRANDE QUE MI ULTIMO ELEMENTO, ENTONCES NADA MAS QUE HACER
+                }
+            }
+            else
+            { // ES PORQUE TIENE HIJO DER Y IZQ -> ME FIJO CUAL ES MAS CHICO PARA EL SWAP
+                if (2 * pos + 1 >= this->tope && 2 * pos + 2 >= this->tope)
+                {
+                    return;
+                }
+                int posHijoChico = this->min(2 * pos + 1, 2 * pos + 2); // Me guardo la pos del de prio mas grande
+
+                if (this->vecNodoHeap[pos]->prioridad > this->vecNodoHeap[posHijoChico]->prioridad)
+                {
+
+                    nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[pos]->prioridad, this->vecNodoHeap[pos]->dato);
+                    delete this->vecNodoHeap[pos];
+                    this->vecNodoHeap[pos] = this->vecNodoHeap[posHijoChico];
+                    this->vecNodoHeap[posHijoChico] = aux;
+                    aux = NULL;
+                    delete aux;
+                    hundirMin(posHijoChico); // LLAMAS A LA RECURSION
                 }
                 else
                 {
@@ -171,24 +234,22 @@ public:
 
     void encolar(float prioridad, T dato)
     {
+        this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
         if (esMinHeap)
         {
             if (this->tope <= this->maxElem)
             {
-                this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
                 flotarMin(this->tope);
-                this->tope = tope + 1; // El tope aumenta porque añadi un elemento
             }
         }
         else
         {
             if (this->tope <= this->maxElem)
             {
-                this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
                 flotarMax(this->tope);
-                this->tope = tope + 1; // El tope aumenta porque añadi un elemento
             }
         }
+        this->tope = tope + 1; // El tope aumenta porque añadi un elemento
     }
 
     void desencolar()
@@ -197,13 +258,22 @@ public:
         {
             return;
         }
-        nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[tope - 1]->prioridad, this->vecNodoHeap[tope - 1]->dato);
-        delete this->vecNodoHeap[0];
-        this->vecNodoHeap[0] = aux;
-        delete this->vecNodoHeap[tope - 1];
-        this->vecNodoHeap[tope - 1] = NULL;
-        this->tope--;
-        hundir(0);
+        else
+        {
+
+            nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[tope - 1]->prioridad, this->vecNodoHeap[tope - 1]->dato);
+            delete this->vecNodoHeap[0];
+            this->vecNodoHeap[0] = aux;
+            delete this->vecNodoHeap[tope - 1];
+            this->vecNodoHeap[tope - 1] = NULL;
+            this->tope--;
+            if(this->esMinHeap){
+                hundirMin(0);
+            }
+            else{
+                hundirMax(0);
+            }
+        }
     }
 
     void destruir()
@@ -217,12 +287,12 @@ public:
         delete[] this->vecNodoHeap;
     }
 
-    float maximaPrioridad()
+    float prioridadTope()
     {
         return (this->vecNodoHeap[0])->prioridad;
     }
 
-    T datoMayPrio()
+    T topDato()
     {
         return (this->vecNodoHeap[0]->dato);
     }
@@ -237,19 +307,4 @@ public:
         return this->tope;
     }
 
-    string dato1primero(T dato1, T dato2)
-    {
-        for (int i = 0; i < this->tope; i++)
-        {
-            if (this->vecNodoHeap[i]->dato == dato1)
-            {
-                return "es BFS";
-            }
-            if (this->vecNodoHeap[i]->dato == dato2)
-            {
-                return "es 93ENC";
-            }
-        }
-        return "no hay ninguno";
-    }
 };

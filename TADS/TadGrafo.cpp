@@ -5,7 +5,7 @@
 #define INF 9999
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
-//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER E EN CUNENTA QUE SOLUCION ECHA ES BASTANATE ADECUABLE ADECUAR REGLAS USAR COLA PRIORIDAD AHORA PARA PODER IR ELIGIENDIO Y QUE TENGNA UN ORDE DE VLOG DE V HAY QUE SABER RAPIDO EL NUMERITO QUE HAYQ UE IR SACANDO VAMOS A IR AGGREGANDO LOS ERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOPLIGICO Y QUE TENG ALA RELGA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES RENES 2 PRIORRIDAES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO OSE A QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMEROQUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
+//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER E EN CUNENTA QUE SOLUCION ECHA ES BASTANATE ADECUABLE ADECUAR REGLAS USAR COLA PRIORIDAD AHORA PARA PODER IR ELIGIENDIO Y QUE TENGNA UN ORDEn DE VLOG DE V HAY QUE SABER RAPIDO EL NUMERITO QUE HAY QUE IR SACANDO VAMOS A IR AGREGANDO LOS vERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOLoGICO Y QUE TENGA LA RELGA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES tENES 2 PRIORRIDAES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO OSE A QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMEROQUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
 //  Creamos la clase Arista, que va a almacenar información sobre las aristas del grafo.
 
 template <class T>
@@ -151,30 +151,33 @@ public:
         bool *vis = new bool[this->tope];
         int *ant = new int[this->tope]; // realmente es necesario?
 
-        Heap<T> *miHeap = new Heap<T>(this->tope); //El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
-        nodoDobleDato<T> *retorno = NULL; // Lo defino, pero aun sin nada
+        bool esMinHeap = true;
+        Heap<T> *miHeap = new Heap<T>(this->tope, esMinHeap); //El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
+        T* vector = new T[this->cantVertices];
+        int totalCostosDeAristas =0;
+        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(vector, totalCostosDeAristas);
 
-        IteradorLista<Arista<T>*> *iter = NULL; // ARREGLO <T> //
         int posOrigen = 0;
         for (int i = 0; i < this->tope; i++)
         {
             dist[i] = INF;
             vis[i] = false;
             ant[i] = -1;
+            retorno->vector[i] = -1;
         }
 
         posOrigen = this->buscarPos(origen);
         dist[posOrigen] = 0;
         int nuevaDist = 0;
-        //vector[0] = //Nachin: origen; No va (Creo yo) Porque lo hago al final final del todo, en el while. //Camejin: Toy de acuerdo
         miHeap->encolar(nuevaDist, origen);
+        IteradorLista<Arista<T>*>* iter =this->listaAdy[posOrigen]->obtenerIterador();
 
-        for (int i = 0; i < this->tope; i++) // no seria cantvertices??!!!!!!!!!!!!
+        for (int i = 0; i < this->cantVertices-1; i++) 
         {
-            posOrigen = this->buscarPos(miHeap->datoMinPrio()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
-            iter = this->listaAdy[posOrigen];                   // Situo el iter en la lista de aristas del vertice especifico(posOrigen).
+            posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
             Arista<T> *aristaActual = NULL;                     // Será cada arista recorrida por el iter.
-
+            iter = this->listaAdy[posOrigen]->obtenerIterador();
+           
             miHeap->desencolar(); //Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
 
             while (iter->hayElemento())
@@ -183,28 +186,28 @@ public:
                 nuevaDist = dist[posOrigen] + aristaActual->costo;
                 if (!vis[aristaActual->conexion] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) //Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
                 {
-                    miHeap->encolar(aristaActual->conexion);
+                    miHeap->encolar(aristaActual->costo,aristaActual->conexion);
                     dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
-                    ant[aristaActual] = posOrigen;
+                    ant[this->buscarPos(aristaActual->conexion)] = posOrigen; 
+
                 }
+                iter->avanzar();
             }
             vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
         }
 
         //AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
 
-        int i=0; 
-        T *vector = new T[this->cantVertices];             
-        vector[0] = origen;   
+        int i=0;             
         int posAnt = this->buscarPos(destino); //Es la posAnt del vertice anterior al de destino.
 
         while(ant[posAnt] != -1){ //cuando sea -1 significa que sos el primero
 
-            vector[i] = this->vertices[posAnt]; // Esto quedaria asi [Destino, AntDestino, AntAntDestino,....,Origen]
+            retorno->vector[i] = *this->vertices[posAnt]; // Esto quedaria asi [Destino, AntDestino, AntAntDestino,....,Origen] // camejin: faltaba asterisco
             posAnt = ant[posAnt]; //Actualizo la posAnt a la anterior de la misma.
             i++; //Incremento para moverme a la siguiente posicion del vector a devolver.
         }
-        retorno->vector = vector;
+        retorno->vector[i] = origen;
         retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
 
         return retorno;

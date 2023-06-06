@@ -24,7 +24,8 @@ int main(int argc, char const *argv[])
     int cantVuelosGrupo = 0;
 
     cin >> cantReservas;
-    Heap<string> *miHeap = new Heap<string>(cantReservas);
+    bool esMinHeap = false;
+    Heap<string> *miHeap = new Heap<string>(cantReservas, esMinHeap);
 
     for (int i = 0; i < cantReservas; i++)
     {
@@ -45,8 +46,8 @@ int main(int argc, char const *argv[])
 
     while (!miHeap->esVacia())
     {
-        promedioGrupo = miHeap->maximaPrioridad();
-        viajeros = miHeap->datoMayPrio();
+        promedioGrupo = miHeap->prioridadTope();
+        viajeros = miHeap->topDato();
         miHeap->desencolar();
         cout.precision(2);
         if (promedioGrupo == static_cast<int>(promedioGrupo))
