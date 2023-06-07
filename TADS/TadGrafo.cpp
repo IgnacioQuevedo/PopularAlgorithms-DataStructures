@@ -32,7 +32,7 @@ public:
     bool existe;
     bool dirigido;
 
-    Arista(T conexion, int costo,bool dirigido,bool existe)
+    Arista(T conexion, int costo, bool dirigido, bool existe)
     {
         this->conexion = conexion;
         this->costo = costo;
@@ -40,13 +40,12 @@ public:
         this->existe = existe;
     }
 
-    Arista(T conexion) //MEPA QUE AL PEDO
+    Arista(T conexion) // MEPA QUE AL PEDO
     {
         this->conexion = conexion;
         this->costo = 0;
         this->dirigido = false;
         this->existe = false;
-        
     }
 };
 
@@ -111,28 +110,39 @@ public:
     void agregarArista(T origen, T conexion, int costo, int dirigido, int existe)
     {
         int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista<T> *aristaSentido1 = new Arista<T>(conexion, costo,dirigido, existe);
-        if(dirigido){
+        Arista<T> *aristaSentido1 = new Arista<T>(conexion, costo, dirigido, existe);
+        if (origen == 87 && conexion == 97)
+        {
+            cout << "MO MOTO OLPONO DORROPONTO";
+        }
+        if (dirigido)
+        {
             this->listaAdy[posOrigen]->insertarPpio(aristaSentido1);
         }
-        else{
-            Arista<T> *aristaSentido2 = new Arista<T>(origen, costo,dirigido, existe);
-            this->listaAdy[posOrigen]->insertarPpio(aristaSentido1); //Inserte la original
+        else
+        {
+            Arista<T> *aristaSentido2 = new Arista<T>(origen, costo, dirigido, existe);
+            this->listaAdy[posOrigen]->insertarPpio(aristaSentido1); // Inserte la original
             int posConexion = this->buscarPos(conexion);
             this->listaAdy[posConexion]->insertarPpio(aristaSentido2);
         }
-        
     }
 
     void borrarVertice(T dato)
     {
         int posBorrar = this->buscarPos(dato);
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posBorrar]->obtenerIterador();
-        //bouza : tema ordenes
-        while(iter->hayElemento()){
-            borrarArista(dato, iter->obtenerElemento()->conexion);
-            iter->avanzar();
+        int i = 0;
+        IteradorLista<Arista<T> *> *iter = NULL;
+        for (i = 0; i < this->cantVertices; i++)
+        {
+            iter = this->listaAdy[i]->obtenerIterador();
+            while (iter->hayElemento())
+            {
+                borrarArista(dato, iter->obtenerElemento()->conexion);
+                iter->avanzar();
+            }
         }
+        // bouza : tema ordenes
         iter = NULL;
         delete iter;
         delete this->vertices[posBorrar];
@@ -143,43 +153,54 @@ public:
 
     void borrarArista(T origen, T destino)
     {
-        int posOrigen = this->buscarPos(origen);
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
-        
-        if(origen == 2 && destino == 1){
-            int pitos = 0;
-        }
-        
-        while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
-        {
-            
-            T pedito = iter->obtenerElemento()->conexion;
-            iter->avanzar();
-        }
-        // SI ESTAMOS PARADOS ACA ES PORQUE ENCONTRAMOS LA ARISTA
-        if(!iter->obtenerElemento()->existe){
-            return;
-        }
-
-        iter->obtenerElemento()->existe = false;
-        if(!iter->obtenerElemento()->dirigido){
-
-            borrarArista(destino, origen);
-        }
-        iter = NULL;
-        delete iter;
+        bool sdaVuelta = false;
+        borrarAristaAux(origen, destino, sdaVuelta);
     }
+    void borrarAristaAux(T origen, T destino, bool sdaVuelta)
+    {
+        int posOrigen = this->buscarPos(origen);
+        // if(posOrigen == -1){
+        //     return; //Significa que estas probando con un borrado
+        // }
+        if (posOrigen != -1) //Porque como recorro todo, entonces voy a recorrer tambien la posible pos ya borrada. Incluso los vertices borrados.
+        {
+            IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
 
-    nodoDobleDato<T>* Dijkstra(T origen, T destino)
+            while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
+            {
+                iter->avanzar();
+            }
+            if (iter->hayElemento()) // Si no entra, es porque no fue creada esa arista.
+            {
+                // Si entras, significa que encontraste la arista.
+                if (!iter->obtenerElemento()->existe)
+                {
+                    return;
+                }
+
+                iter->obtenerElemento()->existe = false;
+            }
+
+            if (sdaVuelta)
+            {
+                return;
+            }
+            sdaVuelta = true;
+            borrarAristaAux(destino, origen, sdaVuelta);
+            iter = NULL;
+            delete iter;
+        }
+    }
+    nodoDobleDato<T> *Dijkstra(T origen, T destino)
     {
         int *dist = new int[this->tope];
         bool *vis = new bool[this->tope];
         int *ant = new int[this->tope]; // realmente es necesario?
 
         bool esMinHeap = true;
-        Heap<T> *miHeap = new Heap<T>(this->tope, esMinHeap); //El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
-        T* vector = new T[this->cantVertices];
-        int totalCostosDeAristas =0;
+        Heap<T> *miHeap = new Heap<T>(this->tope, esMinHeap); // El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
+        T *vector = new T[this->cantVertices];
+        int totalCostosDeAristas = 0;
         nodoDobleDato<T> *retorno = new nodoDobleDato<T>(vector, totalCostosDeAristas);
 
         int posOrigen = 0;
@@ -194,43 +215,57 @@ public:
         posOrigen = this->buscarPos(origen);
         dist[posOrigen] = 0;
         int nuevaDist = 0;
-        miHeap->encolar(nuevaDist, origen);
-        IteradorLista<Arista<T>*>* iter =this->listaAdy[posOrigen]->obtenerIterador();
-
-        for (int i = 0; i < this->cantVertices-1; i++)
+        if (origen == 97)
         {
+            cout << "QUIERO SEXO";
+        }
+        miHeap->encolar(nuevaDist, origen);
+        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador();
+
+        for (int i = 0; i < this->cantVertices - 1; i++)
+        {
+            if (origen == 87)
+            {
+                cout << "QUIERO SEXOOO";
+            }
             posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
-            Arista<T> *aristaActual = NULL;                     // Será cada arista recorrida por el iter.
+            Arista<T> *aristaActual = NULL;           // Será cada arista recorrida por el iter.
             iter = this->listaAdy[posOrigen]->obtenerIterador();
-           
-            miHeap->desencolar(); //Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
+
+            miHeap->desencolar(); // Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
 
             while (iter->hayElemento())
             {
                 aristaActual = iter->obtenerElemento(); // Consigo una de las arista del vertice particular.
                 nuevaDist = dist[posOrigen] + aristaActual->costo;
-                if (!vis[aristaActual->conexion] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) //Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
+                if (!vis[this->buscarPos(aristaActual->conexion)] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) // Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
                 {
-                    miHeap->encolar(aristaActual->costo,aristaActual->conexion);
-                    dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
-                    ant[this->buscarPos(aristaActual->conexion)] = posOrigen; 
 
+                    if (aristaActual->conexion == 97)
+                    {
+                        cout << "QUIERO SEXO";
+                    }
+
+                    miHeap->encolar(aristaActual->costo, aristaActual->conexion);
+                    dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
+                    ant[this->buscarPos(aristaActual->conexion)] = posOrigen;
                 }
                 iter->avanzar();
             }
             vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
         }
 
-        //AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
+        // AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
 
-        int i=0;             
-        int posAnt = this->buscarPos(destino); //Es la posAnt del vertice anterior al de destino.
+        int i = 0;
+        int posAnt = this->buscarPos(destino); // Es la posAnt del vertice anterior al de destino.
 
-        while(ant[posAnt] != -1){ //cuando sea -1 significa que sos el primero
+        while (ant[posAnt] != -1)
+        { // cuando sea -1 significa que sos el primero
 
             retorno->vector[i] = *this->vertices[posAnt]; // Esto quedaria asi [Destino, AntDestino, AntAntDestino,....,Origen] // camejin: faltaba asterisco
-            posAnt = ant[posAnt]; //Actualizo la posAnt a la anterior de la misma.
-            i++; //Incremento para moverme a la siguiente posicion del vector a devolver.
+            posAnt = ant[posAnt];                         // Actualizo la posAnt a la anterior de la misma.
+            i++;                                          // Incremento para moverme a la siguiente posicion del vector a devolver.
         }
         retorno->vector[i] = origen;
         retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
