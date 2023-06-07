@@ -132,7 +132,6 @@ public:
         while(iter->hayElemento()){
             borrarArista(dato, iter->obtenerElemento()->conexion);
             iter->avanzar();
-        
         }
         iter = NULL;
         delete iter;
@@ -150,20 +149,20 @@ public:
         if(origen == 2 && destino == 1){
             int pitos = 0;
         }
-        //caso base recursion
-        if(!iter->obtenerElemento()->existe){
-            return;
-        }
-
+        
         while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
         {
-
+            
             T pedito = iter->obtenerElemento()->conexion;
             iter->avanzar();
         }
         // SI ESTAMOS PARADOS ACA ES PORQUE ENCONTRAMOS LA ARISTA
+        if(!iter->obtenerElemento()->existe){
+            return;
+        }
+
         iter->obtenerElemento()->existe = false;
-        if(!iter->obtenerElemento()->dirigido && !iter->obtenerElemento()->existe){
+        if(!iter->obtenerElemento()->dirigido){
 
             borrarArista(destino, origen);
         }
