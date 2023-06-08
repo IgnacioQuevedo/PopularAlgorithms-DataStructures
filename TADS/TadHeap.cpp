@@ -308,4 +308,14 @@ public:
         return this->tope;
     }
 
+    bool chequearHeap (){
+        for(int i =0; i<this->tope; i++){
+            float b = this->vecNodoHeap[i]->prioridad;
+            if(b <= 0.1 && b != 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
 };
