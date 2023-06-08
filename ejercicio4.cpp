@@ -46,9 +46,6 @@ int main(int argc, char const *argv[])
         cin>>dirigido;
         dirigido = abs(dirigido-2); //Si es 0 es NO DIRIGIDO, y si es 1 es DIRIGIDO
         cin>>existe;
-        if(costo == 88){
-            cout << "SEXOO RICOOo";
-        }
         miGrafo->agregarArista(origen,destino,costo,dirigido,existe);
     }
 
@@ -69,12 +66,10 @@ int main(int argc, char const *argv[])
         cin >> destino;
         miGrafo->borrarArista(origen,destino);
     }
-    cout << "QUIERO NEPEEEE";
 
     cin >> origen;
     cin >> destino;
     miGrafo->Dijkstra(origen,destino);
-    
 
     return 0;
 }

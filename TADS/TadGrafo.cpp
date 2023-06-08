@@ -111,10 +111,7 @@ public:
     {
         int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
         Arista<T> *aristaSentido1 = new Arista<T>(conexion, costo, dirigido, existe);
-        if (origen == 87 && conexion == 97)
-        {
-            cout << "MO MOTO OLPONO DORROPONTO";
-        }
+
         if (dirigido)
         {
             this->listaAdy[posOrigen]->insertarPpio(aristaSentido1);
@@ -215,19 +212,12 @@ public:
         posOrigen = this->buscarPos(origen);
         dist[posOrigen] = 0;
         int nuevaDist = 0;
-        if (origen == 97)
-        {
-            cout << "QUIERO SEXO";
-        }
+
         miHeap->encolar(nuevaDist, origen);
         IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador();
 
         for (int i = 0; i < this->cantVertices - 1; i++)
         {
-            if (origen == 87)
-            {
-                cout << "QUIERO SEXOOO";
-            }
             posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
             Arista<T> *aristaActual = NULL;           // Será cada arista recorrida por el iter.
             iter = this->listaAdy[posOrigen]->obtenerIterador();
@@ -240,13 +230,7 @@ public:
                 nuevaDist = dist[posOrigen] + aristaActual->costo;
                 if (!vis[this->buscarPos(aristaActual->conexion)] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) // Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
                 {
-
-                    if (aristaActual->conexion == 97)
-                    {
-                        cout << "QUIERO SEXO";
-                    }
-
-                    miHeap->encolar(aristaActual->costo, aristaActual->conexion);
+                    miHeap->encolar(nuevaDist, aristaActual->conexion);
                     dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
                     ant[this->buscarPos(aristaActual->conexion)] = posOrigen;
                 }
