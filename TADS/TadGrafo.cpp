@@ -13,12 +13,12 @@ class nodoDobleDato
 {
 
 public:
-    T *vector;
+    Lista<T>* listaElem;
     int totalCostosDeAristas;
 
-    nodoDobleDato(T *vector, int totalCostosDeAristas)
+    nodoDobleDato(Lista<T> *listaElem, int totalCostosDeAristas)
     {
-        this->vector = vector; // THIS->PRIORIDAD ("LA PRIO DEL HEAP SERÁ LA QUE ME PASEN POR PARAMETRO")
+        this->listaElem = listaElem;
         this->totalCostosDeAristas = totalCostosDeAristas;
     }
 };
@@ -202,13 +202,13 @@ public:
     {
         int *dist = new int[this->tope];
         bool *vis = new bool[this->tope];
-        int *ant = new int[this->tope]; // realmente es necesario?
+        int *ant = new int[this->tope];
 
         bool esMinHeap = true;
         Heap<T> *miHeap = new Heap<T>(this->cantAristas, esMinHeap); // El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
-        T *vector = new T[this->cantVertices];
+        Lista<T>* listaElem = new Lista<T>();
         int totalCostosDeAristas = 0;
-        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(vector, totalCostosDeAristas);
+        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(listaElem, totalCostosDeAristas);
 
         int posOrigen = 0;
         for (int i = 0; i < this->tope; i++)
@@ -216,7 +216,6 @@ public:
             dist[i] = INF;
             vis[i] = false;
             ant[i] = -1;
-            retorno->vector[i] = -1;
         }
 
         posOrigen = this->buscarPos(origen);
@@ -229,7 +228,7 @@ public:
         while(!miHeap->esVacia()){
          
             T dato = miHeap->topDato();
-            posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
+            posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
             Arista<T> *aristaActual = NULL;           // Será cada arista recorrida por el iter.
             iter = this->listaAdy[posOrigen]->obtenerIterador();
             miHeap->desencolar(); // Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
@@ -249,19 +248,23 @@ public:
             vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
         
         }
-        // AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
+        // AFUERA DEL WHILE,ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
+        //--------------------------------------------------------------------
 
-        int i = 0;
         int posAnt = this->buscarPos(destino); // Es la posAnt del vertice anterior al de destino.
 
         while (ant[posAnt] != -1)
-        { // cuando sea -1 significa que sos el primero
+        { // cuando el anterior a esa posicion sea -1 significa: --> o que sos el primero o no existe el camino
 
-            retorno->vector[i] = *this->vertices[posAnt]; // Esto quedaria asi [Destino, AntDestino, AntAntDestino,....,Origen] // camejin: faltaba asterisco
+            retorno->listaElem->insertarPpio(*this->vertices[posAnt]); //Insertamos al ppio, asi queda en orden, EL vector ant, contiene la pos del vertice anterior al parado
             posAnt = ant[posAnt];                         // Actualizo la posAnt a la anterior de la misma.
-            i++;                                          // Incremento para moverme a la siguiente posicion del vector a devolver.
         }
-        retorno->vector[i] = origen;
+
+        if(*this->vertices[posAnt] != origen){ //Si la posAnt no es el origen, significa que el while salió antes lo que significa que no se encontró un valor anterior para ese valor por ende -> NO EXISTE CAMINO
+            return NULL;      
+        }
+        // Si es el origen, entonce se encontró el camino total, por lo tanto 10/10
+        retorno->listaElem->insertarPpio(origen);
         retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
 
         return retorno;
