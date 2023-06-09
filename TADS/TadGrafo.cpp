@@ -106,6 +106,7 @@ public:
         this->lugaresLibres->borrar(posLibre);
         this->vertices[posLibre] = new T(dato);
         this->cantVertices++;
+        
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
@@ -163,9 +164,7 @@ public:
     void borrarAristaAux(T origen, T destino, bool sdaVuelta)
     {
         int posOrigen = this->buscarPos(origen);
-        // if(posOrigen == -1){
-        //     return; //Significa que estas probando con un borrado
-        // }
+ 
         if (posOrigen != -1) // Porque como recorro todo, entonces voy a recorrer tambien la posible pos ya borrada. Incluso los vertices borrados.
         {
             IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
@@ -198,6 +197,7 @@ public:
             delete iter;
         }
     }
+
     nodoDobleDato<T> *Dijkstra(T origen, T destino)
     {
         int *dist = new int[this->tope];
@@ -218,54 +218,37 @@ public:
             ant[i] = -1;
             retorno->vector[i] = -1;
         }
-//a
+
         posOrigen = this->buscarPos(origen);
         dist[posOrigen] = 0;
         int nuevaDist = 0;
 
         miHeap->encolar(nuevaDist, origen);
-        bool a = miHeap->chequearHeap();
-        if (a)
-        {
-            cout << "Hola";
-        }
         IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador();
 
-        for (int i = 0; i < this->cantVertices; i++)
-        {
+        while(!miHeap->esVacia()){
+         
+            T dato = miHeap->topDato();
             posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba). //camejin: faltaban ()
             Arista<T> *aristaActual = NULL;           // Será cada arista recorrida por el iter.
             iter = this->listaAdy[posOrigen]->obtenerIterador();
-
             miHeap->desencolar(); // Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
-            a = miHeap->chequearHeap();
-            if (a)
-            {
-                cout << "Hola";
-            }
+    
             while (iter->hayElemento())
             {
                 aristaActual = iter->obtenerElemento(); // Consigo una de las arista del vertice particular.
-                nuevaDist = dist[posOrigen] + aristaActual->costo;
-                if(aristaActual->conexion == 98161){
-                    cout << "whyGod";
-                }
+                nuevaDist = dist[posOrigen] + aristaActual->costo;   
                 if (!vis[this->buscarPos(aristaActual->conexion)] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) // Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
                 {
                     miHeap->encolar(nuevaDist, aristaActual->conexion);
-                    a = miHeap->chequearHeap();
-                    if (a)
-                    {
-                        cout << "Hola";
-                    }
                     dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
                     ant[this->buscarPos(aristaActual->conexion)] = posOrigen;
                 }
                 iter->avanzar();
             }
             vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
+        
         }
-
         // AFUERA DE TODO FOR, ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
 
         int i = 0;
@@ -284,24 +267,3 @@ public:
         return retorno;
     }
 };
-
-// int main(int argc, char const *argv[])
-// {
-//     Grafo<int> *miGrafo = new Grafo<int>(5);
-//     miGrafo->agregarVertice(1);
-//     miGrafo->agregarVertice(2);
-//     miGrafo->agregarVertice(3);
-//     miGrafo->agregarVertice(4);
-//     miGrafo->agregarArista(1, 2, 10, 1, 1);
-//     miGrafo->agregarArista(1, 3, 7, 1, 1);
-//     miGrafo->agregarArista(2, 4, 9, 1, 1);
-//     miGrafo->agregarArista(3, 4, 1, 1, 1);
-//     //miGrafo->agregarArista(3, 3, 22, 1, 1);
-//     //miGrafo->agregarArista(1, 5, 10, 1, 1);
-//     //miGrafo->borrarArista(3, 3);
-//     //miGrafo->borrarVertice(2);
-//     //miGrafo->agregarVertice(3500);
-//     //miGrafo->borrarVertice(3);
-//     //miGrafo->borrarVertice(4);
-//     miGrafo->Dijkstra(1, 4);
-// };

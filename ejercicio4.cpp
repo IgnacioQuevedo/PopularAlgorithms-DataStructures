@@ -17,8 +17,6 @@ int main(int argc, char const *argv[])
 
 
 
-   
-
     int cantVertices = 0;
     cin >> cantVertices;
     Grafo<int>* miGrafo = new Grafo<int>(cantVertices); 
@@ -46,6 +44,7 @@ int main(int argc, char const *argv[])
         cin>>dirigido;
         dirigido = abs(dirigido-2); //Si es 0 es NO DIRIGIDO, y si es 1 es DIRIGIDO
         cin>>existe;
+
         miGrafo->agregarArista(origen,destino,costo,dirigido,existe);
     }
 
