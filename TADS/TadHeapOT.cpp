@@ -24,7 +24,7 @@ class nodoHeap
     // LO QUE VA A TENER MI NODO HEAP
 public:
     int prioridad; // es la cantidad de incidencias del nodo
-    nodoDobleDato<T>* dato;
+    nodoDobleDato<T> *dato;
 
     // LLAMO AL CONSTRUCTOR
 
@@ -144,28 +144,32 @@ private:
                     {
                         return;
                     }
-                    else{
-                        if(this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[pos * 2 + 1]->dato->vertice){
+                    else
+                    {
+                        if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[pos * 2 + 1]->dato->vertice)
+                        {
                             swap = true;
                         }
-                        else{
+                        else
+                        {
                             return;
                         }
-                    }
-                    if (swap)
-                    {
-                        nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[pos]->prioridad, this->vecNodoHeap[pos]->dato);
-                        delete this->vecNodoHeap[pos];
-                        this->vecNodoHeap[pos] = this->vecNodoHeap[pos*2+1];
-                        this->vecNodoHeap[pos*2+1] = aux;
-                        aux = NULL;
-                        delete aux;
-                        hundir(pos*2+1); // LLAMAS A LA RECURSION
                     }
                 }
                 else
                 {
                     return;
+                }
+
+                if (swap)
+                {
+                    nodoHeap<T> *aux = new nodoHeap<T>(this->vecNodoHeap[pos]->prioridad, this->vecNodoHeap[pos]->dato);
+                    delete this->vecNodoHeap[pos];
+                    this->vecNodoHeap[pos] = this->vecNodoHeap[pos * 2 + 1];
+                    this->vecNodoHeap[pos * 2 + 1] = aux;
+                    aux = NULL;
+                    delete aux;
+                    hundir(pos * 2 + 1); // LLAMAS A LA RECURSION
                 }
             }
             else
@@ -188,11 +192,14 @@ private:
                         {
                             swap = true;
                         }
-                        else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[posHijoChico]->dato->cantAristas){
-                            if(this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[posHijoChico]->dato->vertice){
+                        else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[posHijoChico]->dato->cantAristas)
+                        {
+                            if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[posHijoChico]->dato->vertice)
+                            {
                                 swap = true;
                             }
-                            else{
+                            else
+                            {
                                 return;
                             }
                         }
@@ -271,7 +278,7 @@ public:
         return (this->vecNodoHeap[0])->prioridad;
     }
 
-    nodoHeap<T>* topDato()
+    nodoHeap<T> *topDato()
     {
         return this->vecNodoHeap[0];
     }

@@ -201,21 +201,32 @@ public:
 
 int main(int argc, char const *argv[])
 {
-    Grafo<int>* miGrafo = new Grafo<int>(9);
+    Grafo<int>* miGrafo = new Grafo<int>(10);
 
-    for(int i =1; i <= 9; i++){
+    for(int i =1; i <= 10; i++){
         miGrafo->agregarVertice(i);
     }
-    miGrafo->agregarArista(1,9);
-    miGrafo->agregarArista(1,2);
+    miGrafo->agregarArista(10,2);
+    miGrafo->agregarArista(1,5);
     miGrafo->agregarArista(1,6);
-    miGrafo->agregarArista(5,3);
-    miGrafo->agregarArista(5,8);
-    miGrafo->agregarArista(2,3);
-    miGrafo->agregarArista(6,4);
-    miGrafo->agregarArista(8,9);
-    miGrafo->agregarArista(3,9);
-    miGrafo->agregarArista(4,9);
+    miGrafo->agregarArista(7,1);
+    miGrafo->agregarArista(9,2);
+    miGrafo->agregarArista(5,6);
+    miGrafo->agregarArista(1,2);
+    miGrafo->agregarArista(2,4);
+    miGrafo->agregarArista(3,2);
+    miGrafo->agregarArista(2,6);
+    miGrafo->agregarArista(1,6);
+    miGrafo->agregarArista(7,5);
+    miGrafo->agregarArista(10,5);
+    miGrafo->agregarArista(8,7);
+    miGrafo->agregarArista(8,6);
+    miGrafo->agregarArista(10,6);
+    miGrafo->agregarArista(3,6);
+    miGrafo->agregarArista(9,4);
+    miGrafo->agregarArista(9,1);
+    miGrafo->agregarArista(5,4);
+    miGrafo->agregarArista(3,8);
 
     Lista<int>* miLista = miGrafo->ordenTopologico();
 
