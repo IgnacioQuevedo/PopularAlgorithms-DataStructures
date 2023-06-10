@@ -154,15 +154,14 @@ public:
         // Hasta aca setteamos el vector "grados"
         Lista<T> *retorno = new Lista<T>();
         Heap<T>* miHeap = new Heap<T>(this->cantVertices);
-        T vertex = NULL;
-
         for (int i = 0; i < this->cantVertices; i++)
         {
-            nodoDobleDato<T> *elemento = new nodoDobleDato<T>(0,vertex);
+            
             if (grados[i] == 0)
             {
-                elemento->cantAristas = cantAristasVertice[i];
-                elemento->vertice = *this->vertices[i];
+                int cantAristas = cantAristasVertice[i];
+                T vertice = *this->vertices[i];
+                nodoDobleDato<T> *elemento = new nodoDobleDato<T>(cantAristas,vertice);
                 miHeap->encolar(0, elemento); // nivel cero porque son los origenes (sin incidencias)
             }
         }
@@ -186,9 +185,10 @@ public:
                 grados[this->buscarPos(iter->obtenerElemento()->conexion)]--;
                 cantAristasVertice[posOrigen]--;
                 if(grados[this->buscarPos(iter->obtenerElemento()->conexion)] == 0){
-                    nodoDobleDato<T>* elementoOrigen = new nodoDobleDato<T>(0,vertex);
-                    elementoOrigen->cantAristas = cantAristasVertice[buscarPos(iter->obtenerElemento()->conexion)];
-                    elementoOrigen->vertice = iter->obtenerElemento()->conexion;
+                    
+                    int cantAristas = cantAristasVertice[buscarPos(iter->obtenerElemento()->conexion)];
+                    T vertice = iter->obtenerElemento()->conexion;
+                    nodoDobleDato<T>* elementoOrigen = new nodoDobleDato<T>(cantAristas,vertice);
                     miHeap->encolar(nivelConexion, elementoOrigen);
                 }
                 iter->avanzar();
@@ -198,38 +198,4 @@ public:
         return retorno;
     }
 };
-
-int main(int argc, char const *argv[])
-{
-    Grafo<int>* miGrafo = new Grafo<int>(10);
-
-    for(int i =1; i <= 10; i++){
-        miGrafo->agregarVertice(i);
-    }
-    miGrafo->agregarArista(10,2);
-    miGrafo->agregarArista(1,5);
-    miGrafo->agregarArista(1,6);
-    miGrafo->agregarArista(7,1);
-    miGrafo->agregarArista(9,2);
-    miGrafo->agregarArista(5,6);
-    miGrafo->agregarArista(1,2);
-    miGrafo->agregarArista(2,4);
-    miGrafo->agregarArista(3,2);
-    miGrafo->agregarArista(2,6);
-    miGrafo->agregarArista(1,6);
-    miGrafo->agregarArista(7,5);
-    miGrafo->agregarArista(10,5);
-    miGrafo->agregarArista(8,7);
-    miGrafo->agregarArista(8,6);
-    miGrafo->agregarArista(10,6);
-    miGrafo->agregarArista(3,6);
-    miGrafo->agregarArista(9,4);
-    miGrafo->agregarArista(9,1);
-    miGrafo->agregarArista(5,4);
-    miGrafo->agregarArista(3,8);
-
-    Lista<int>* miLista = miGrafo->ordenTopologico();
-
-    return 0;
-}
 

@@ -58,17 +58,20 @@ private:
         }
         else
         { // LAS PRIORIDADES SON IGUALES
-            if (this->vecNodoHeap[pos]->dato->cantAristas > this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
-            {
-                swap = true;
-            }
-            else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
-            {
+            // if (this->vecNodoHeap[pos]->dato->cantAristas > this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
+            // {
+            //     swap = true;
+            // }
+            // else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
+            // {
                 if (this->vecNodoHeap[pos]->dato->vertice < this->vecNodoHeap[(pos - 1) / 2]->dato->vertice)
                 {
                     swap = true;
                 }
-            }
+                else{
+                    return;
+                }
+            //}
         }
 
         if (swap)
@@ -91,16 +94,16 @@ private:
         }
         else if (this->vecNodoHeap[posIzq]->prioridad == this->vecNodoHeap[posDer]->prioridad)
         {
-            if (this->vecNodoHeap[posIzq]->dato->cantAristas > this->vecNodoHeap[posDer]->dato->cantAristas)
-            {
-                return posIzq;
-            }
-            else if (this->vecNodoHeap[posIzq]->dato->cantAristas < this->vecNodoHeap[posDer]->dato->cantAristas)
-            {
-                return posDer;
-            }
-            else
-            {
+            // if (this->vecNodoHeap[posIzq]->dato->cantAristas > this->vecNodoHeap[posDer]->dato->cantAristas)
+            // {
+            //     return posIzq;
+            // }
+            // else if (this->vecNodoHeap[posIzq]->dato->cantAristas < this->vecNodoHeap[posDer]->dato->cantAristas)
+            // {
+            //     return posDer;
+            // }
+            //else
+            //{
                 if (this->vecNodoHeap[posIzq]->dato->vertice < this->vecNodoHeap[posDer]->dato->vertice)
                 {
                     return posIzq;
@@ -109,7 +112,7 @@ private:
                 {
                     return posDer;
                 }
-            }
+            //}
         }
         else
         {
