@@ -1,33 +1,11 @@
 #include <iostream>
 #include <fstream> //borrarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!!!!!!!!!!!!!!
 #include "TadLista.cpp"
-#include "TadHeap.cpp"
-#define INF 9999
+#include "TadHeapOT.cpp"
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
-//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER 
-USAR COLA PRIORIDAD PARA PODER IR ELIGIENDO Y QUE TENGA UN ORDEN V LOG, HAY QUE SABER RAPIDO EL 
-NUMERP QUE HAY QUE IR SACANDO, ENTONCES VAMOS A IR AGREGANDO LOS VERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE.
-LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOLoGICO.
-REGLA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES TENES 2 PRIORIDADES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO O SEA QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y 
-EL SEGUNDODA DATO ES EL NUMERO //DE ARISTAS QUE TIENE??
-QUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD -----PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI-- 
-Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
-
-//  Creamos la clase Arista, que va a almacenar información sobre las aristas del grafo.
-
-template <class T>
-class nodoTripleDato
-{
-
-public:
-    nodoTripleDato(T vertice,int nivel,int cantAristas)
-    {
-        this->vertice = vertice;
-        this->nivel = nivel;
-        this->cantAristas = cantAristas;
-    }
-};
+//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER
+// USAR COLA PRIORIDAD PARA PODER IR ELIGIENDO Y QUE TENGA UN ORDEN V LOG, HAY QUE SABER RAPIDO EL NUMERP QUE HAY QUE IR SACANDO, ENTONCES VAMOS A IR AGREGANDO LOS VERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE.LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOLoGICO.REGLA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES TENES 2 PRIORIDADES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO O SEA QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMERO // DE ARISTAS QUE TIENE??
 
 template <class T>
 class Arista
@@ -151,64 +129,96 @@ public:
         delete iter;
     }
 
-    void ordenTopologico()
+    Lista<T> *ordenTopologico()
     {
         int *grados = new int[this->cantVertices];
-        bool esMin = true;
-        HeapOT<nodoTripleDato> *miHeap = new HeapOT(this->cantAristas, esMin);
-
-        for (int i = 0; i < this->tope; i++)
+        int *cantAristasVertice = new int[this->cantVertices];
+        int aux = 0;
+        for (int i = 0; i < this->cantVertices; i++)
         {
-            cantIncidencias[i] = 0;
+            grados[i] = 0;
         }
-        
-        //CALCULO DE GRADOS
-        IteradorLista<T> *iter = NULL;
-        for (int i = 0; i < this->cantVertices; i++) // No seria tope?
+        IteradorLista<Arista<T> *> *iter = NULL;
+        for (int i = 0; i < this->cantVertices; i++)
         {
             iter = this->listaAdy[i]->obtenerIterador();
+            aux = 0;
             while (iter->hayElemento())
             {
-                T verticeReceptor = (iter->obtenerElemento())->conexion; // Vertice al que le incide una arista
-                grados[this->buscarPos(verticeReceptor)]++;
+                grados[this->buscarPos(iter->obtenerElemento()->conexion)]++;
+                aux++;
+                iter->avanzar();
+            }
+            cantAristasVertice[i] = aux;
+        }
+        // Hasta aca setteamos el vector "grados"
+        Lista<T> *retorno = new Lista<T>();
+        Heap<T>* miHeap = new Heap<T>(this->cantVertices);
+        T vertex = NULL;
+
+        for (int i = 0; i < this->cantVertices; i++)
+        {
+            nodoDobleDato<T> *elemento = new nodoDobleDato<T>(0,vertex);
+            if (grados[i] == 0)
+            {
+                elemento->cantAristas = cantAristasVertice[i];
+                elemento->vertice = *this->vertices[i];
+                miHeap->encolar(0, elemento); // nivel cero porque son los origenes (sin incidencias)
+            }
+        }
+
+        while (!miHeap->esVacia())
+        {
+            nodoHeap<T>* cabezal = miHeap->topDato();
+            
+            int nivelConexion = cabezal->prioridad + 1;
+            nodoDobleDato<T>* elementoOrigen = cabezal->dato;
+            
+            int posOrigen = buscarPos(elementoOrigen->vertice); // posOrigen es el padre
+            retorno->insertarFin(elementoOrigen->vertice);
+            miHeap->desencolar();
+            iter = this->listaAdy[posOrigen]->obtenerIterador();
+
+            //Recorremos la lista de adyacencia y disminuimos uno a las aristas
+            //Si el grado una vez borrado es 0 añadimos la conexion
+            while (iter->hayElemento())
+            {
+                grados[this->buscarPos(iter->obtenerElemento()->conexion)]--;
+                cantAristasVertice[posOrigen]--;
+                if(grados[this->buscarPos(iter->obtenerElemento()->conexion)] == 0){
+                    nodoDobleDato<T>* elementoOrigen = new nodoDobleDato<T>(0,vertex);
+                    elementoOrigen->cantAristas = cantAristasVertice[buscarPos(iter->obtenerElemento()->conexion)];
+                    elementoOrigen->vertice = iter->obtenerElemento()->conexion;
+                    miHeap->encolar(nivelConexion, elementoOrigen);
+                }
                 iter->avanzar();
             }
         }
 
-        //Recorro el vector grados
-        
-        for (int i = 0; i < this->cantVertices; i++)
-        {
-            
-            if(grados[i] == 0){
-
-
-
-
-
-
-
-            }
-
-
-
-
-
-
-
-        }
-        
-        
-
-
-
-
-
-
-
-
-
-
-
+        return retorno;
     }
 };
+
+int main(int argc, char const *argv[])
+{
+    Grafo<int>* miGrafo = new Grafo<int>(9);
+
+    for(int i =1; i <= 9; i++){
+        miGrafo->agregarVertice(i);
+    }
+    miGrafo->agregarArista(1,9);
+    miGrafo->agregarArista(1,2);
+    miGrafo->agregarArista(1,6);
+    miGrafo->agregarArista(5,3);
+    miGrafo->agregarArista(5,8);
+    miGrafo->agregarArista(2,3);
+    miGrafo->agregarArista(6,4);
+    miGrafo->agregarArista(8,9);
+    miGrafo->agregarArista(3,9);
+    miGrafo->agregarArista(4,9);
+
+    Lista<int>* miLista = miGrafo->ordenTopologico();
+
+    return 0;
+}
+
