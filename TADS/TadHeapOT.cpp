@@ -2,20 +2,6 @@
 #include <fstream>
 using namespace std;
 
-template <class T>
-class nodoDobleDato
-{
-
-public:
-    int cantAristas;
-    T vertice;
-
-    nodoDobleDato(int cantAristas, T vertice)
-    {
-        this->cantAristas = cantAristas;
-        this->vertice = vertice;
-    }
-};
 
 template <class T>
 class nodoHeap
@@ -24,11 +10,11 @@ class nodoHeap
     // LO QUE VA A TENER MI NODO HEAP
 public:
     int prioridad; // es la cantidad de incidencias del nodo
-    nodoDobleDato<T> *dato;
+    T dato;
 
     // LLAMO AL CONSTRUCTOR
 
-    nodoHeap(int prioridad, nodoDobleDato<T> *dato)
+    nodoHeap(int prioridad, T dato)
     {
         this->prioridad = prioridad; // THIS->PRIORIDAD ("LA PRIO DEL HEAP SERÁ LA QUE ME PASEN POR PARAMETRO")
         this->dato = dato;
@@ -57,21 +43,15 @@ private:
             swap = true;
         }
         else
-        { // LAS PRIORIDADES SON IGUALES
-            // if (this->vecNodoHeap[pos]->dato->cantAristas > this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
-            // {
-            //     swap = true;
-            // }
-            // else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[(pos - 1) / 2]->dato->cantAristas)
-            // {
-                if (this->vecNodoHeap[pos]->dato->vertice < this->vecNodoHeap[(pos - 1) / 2]->dato->vertice)
-                {
-                    swap = true;
-                }
-                else{
-                    return;
-                }
-            //}
+        {
+            if (this->vecNodoHeap[pos]->dato< this->vecNodoHeap[(pos - 1) / 2]->dato)
+            {
+                swap = true;
+            }
+            else
+            {
+                return;
+            }
         }
 
         if (swap)
@@ -102,16 +82,16 @@ private:
             // {
             //     return posDer;
             // }
-            //else
+            // else
             //{
-                if (this->vecNodoHeap[posIzq]->dato->vertice < this->vecNodoHeap[posDer]->dato->vertice)
-                {
-                    return posIzq;
-                }
-                else
-                {
-                    return posDer;
-                }
+            if (this->vecNodoHeap[posIzq]->dato < this->vecNodoHeap[posDer]->dato)
+            {
+                return posIzq;
+            }
+            else
+            {
+                return posDer;
+            }
             //}
         }
         else
@@ -147,16 +127,16 @@ private:
                     // {
                     //     return;
                     // }
-                    //else
+                    // else
                     //{
-                        if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[pos * 2 + 1]->dato->vertice)
-                        {
-                            swap = true;
-                        }
-                        else
-                        {
-                            return;
-                        }
+                    if (this->vecNodoHeap[pos]->dato > this->vecNodoHeap[pos * 2 + 1]->dato)
+                    {
+                        swap = true;
+                    }
+                    else
+                    {
+                        return;
+                    }
                     //}
                 }
                 else
@@ -197,14 +177,14 @@ private:
                         // }
                         // else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[posHijoChico]->dato->cantAristas)
                         // {
-                            if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[posHijoChico]->dato->vertice)
-                            {
-                                swap = true;
-                            }
-                            else
-                            {
-                                return;
-                            }
+                        if (this->vecNodoHeap[pos]->dato > this->vecNodoHeap[posHijoChico]->dato)
+                        {
+                            swap = true;
+                        }
+                        else
+                        {
+                            return;
+                        }
                         //}
                     }
                 }
@@ -235,7 +215,7 @@ public:
         }
     }
 
-    void encolar(int prioridad, nodoDobleDato<T> *dato)
+    void encolar(int prioridad, T dato)
     {
         this->vecNodoHeap[tope] = new nodoHeap<T>(prioridad, dato); // TOPE = LA POS siguiente al ultimo eleme
 

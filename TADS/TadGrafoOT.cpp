@@ -161,8 +161,7 @@ public:
             {
                 int cantAristas = cantAristasVertice[i];
                 T vertice = *this->vertices[i];
-                nodoDobleDato<T> *elemento = new nodoDobleDato<T>(cantAristas,vertice);
-                miHeap->encolar(0, elemento); // nivel cero porque son los origenes (sin incidencias)
+                miHeap->encolar(0, vertice); // nivel cero porque son los origenes (sin incidencias)
             }
         }
 
@@ -171,10 +170,10 @@ public:
             nodoHeap<T>* cabezal = miHeap->topDato();
             
             int nivelConexion = cabezal->prioridad + 1;
-            nodoDobleDato<T>* elementoOrigen = cabezal->dato;
+            T vertice = cabezal->dato;
             
-            int posOrigen = buscarPos(elementoOrigen->vertice); // posOrigen es el padre
-            retorno->insertarFin(elementoOrigen->vertice);
+            int posOrigen = buscarPos(vertice); // posOrigen es el padre
+            retorno->insertarFin(vertice);
             miHeap->desencolar();
             iter = this->listaAdy[posOrigen]->obtenerIterador();
 
@@ -183,13 +182,10 @@ public:
             while (iter->hayElemento())
             {
                 grados[this->buscarPos(iter->obtenerElemento()->conexion)]--;
-                cantAristasVertice[posOrigen]--;
                 if(grados[this->buscarPos(iter->obtenerElemento()->conexion)] == 0){
                     
-                    int cantAristas = cantAristasVertice[buscarPos(iter->obtenerElemento()->conexion)];
                     T vertice = iter->obtenerElemento()->conexion;
-                    nodoDobleDato<T>* elementoOrigen = new nodoDobleDato<T>(cantAristas,vertice);
-                    miHeap->encolar(nivelConexion, elementoOrigen);
+                    miHeap->encolar(nivelConexion, vertice);
                 }
                 iter->avanzar();
             }
