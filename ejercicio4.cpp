@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "./TADS/TadGrafo.cpp"
+#include "./TADS/TadGrafoDijkstra.cpp"
 using namespace std;
 
 int main(int argc, char const *argv[])
