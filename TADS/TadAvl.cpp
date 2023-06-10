@@ -16,8 +16,8 @@ public:
         this->dato = dato;
         this->izq = NULL;
         this->der = NULL;
-        this->apariciones =0;
-        this->altura=0;
+        this->apariciones = 0;
+        this->altura = 0;
     }
 };
 
@@ -31,16 +31,33 @@ private:
     int cantElem;
     int largoDado;
 
+
+    nodoAvl<T>* rotarIzq(nodoAvl<T>* nodo){
+
+    }
+
+    nodoAvl<T>* rotarDer(nodoAvl<T>* nodo){
+
+        nodoAvl<T>* nuevaRaiz = nodo->izq;
+        nodoAvl<T>* temporal = nodo->der;
+
+        nuevaRaiz->der = nodo;
+
+    }
+
 public:
-<<<<<<< HEAD
     Avl(int largoDado)
-=======
-    Avl(T dato, int largoDado)
->>>>>>> a8cf741f94b828417928eca950b9f0d69dc9803c
     {
         this->arbol = NULL;
         this->largoDado = largoDado;
         this->cantElem = 0;
+    }
+
+    nodoAvl<T>* insertar(nodoAvl<T>* arbol, T dato){
+        
+    
+    
+    
     }
 
     
