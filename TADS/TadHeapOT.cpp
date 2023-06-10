@@ -139,16 +139,16 @@ private:
                 }
                 else if (this->vecNodoHeap[pos]->prioridad == this->vecNodoHeap[pos * 2 + 1]->prioridad)
                 {
-                    if (this->vecNodoHeap[pos]->dato->cantAristas < this->vecNodoHeap[pos * 2 + 1]->dato->cantAristas)
-                    {
-                        swap = true;
-                    }
-                    else if (this->vecNodoHeap[pos]->dato->cantAristas > this->vecNodoHeap[pos * 2 + 1]->dato->cantAristas)
-                    {
-                        return;
-                    }
-                    else
-                    {
+                    // if (this->vecNodoHeap[pos]->dato->cantAristas < this->vecNodoHeap[pos * 2 + 1]->dato->cantAristas)
+                    // {
+                    //     swap = true;
+                    // }
+                    // else if (this->vecNodoHeap[pos]->dato->cantAristas > this->vecNodoHeap[pos * 2 + 1]->dato->cantAristas)
+                    // {
+                    //     return;
+                    // }
+                    //else
+                    //{
                         if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[pos * 2 + 1]->dato->vertice)
                         {
                             swap = true;
@@ -157,7 +157,7 @@ private:
                         {
                             return;
                         }
-                    }
+                    //}
                 }
                 else
                 {
@@ -191,12 +191,12 @@ private:
                 {
                     if (this->vecNodoHeap[pos]->prioridad == this->vecNodoHeap[posHijoChico]->prioridad)
                     {
-                        if ((this->vecNodoHeap[pos]->dato->cantAristas < this->vecNodoHeap[posHijoChico]->dato->cantAristas))
-                        {
-                            swap = true;
-                        }
-                        else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[posHijoChico]->dato->cantAristas)
-                        {
+                        // if ((this->vecNodoHeap[pos]->dato->cantAristas < this->vecNodoHeap[posHijoChico]->dato->cantAristas))
+                        // {
+                        //     swap = true;
+                        // }
+                        // else if (this->vecNodoHeap[pos]->dato->cantAristas == this->vecNodoHeap[posHijoChico]->dato->cantAristas)
+                        // {
                             if (this->vecNodoHeap[pos]->dato->vertice > this->vecNodoHeap[posHijoChico]->dato->vertice)
                             {
                                 swap = true;
@@ -205,7 +205,7 @@ private:
                             {
                                 return;
                             }
-                        }
+                        //}
                     }
                 }
                 if (swap)
