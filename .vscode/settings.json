@@ -15,7 +15,8 @@
         "utility": "cpp",
         "xiosbase": "cpp",
         "xstring": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "cstdlib": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
