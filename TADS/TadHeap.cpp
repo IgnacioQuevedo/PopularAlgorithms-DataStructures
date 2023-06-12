@@ -298,6 +298,10 @@ public:
         return (this->vecNodoHeap[0]->dato);
     }
 
+    int topPrio(){
+        return (this->vecNodoHeap[0]->prioridad);
+    }
+
     bool esVacia()
     {
         return this->tope == 0;
