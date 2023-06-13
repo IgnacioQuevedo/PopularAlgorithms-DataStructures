@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     cin >> cantAristas;
 
 
-    Grafo<int>* miGrafo = new Grafo<int>(cantVertices);
+    Grafo* miGrafo = new Grafo(cantVertices);
     
     for (int i = 1; i <= cantVertices; i++)
     {
@@ -46,8 +46,8 @@ int main(int argc, char const *argv[])
 
    while (iter->hayElemento())
    {
-    cout << iter->obtenerElemento() <<endl;
-    iter->avanzar();
+        cout << iter->obtenerElemento() <<endl;
+        iter->avanzar();
    }
    
     return 0;

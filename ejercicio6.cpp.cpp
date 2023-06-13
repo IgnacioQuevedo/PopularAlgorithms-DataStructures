@@ -18,7 +18,7 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
 
         //Si vos sos par, entonces hay una cantidad impar de personitas atras tuyas.
 
-        if (numeros[posMedio] != numeros[posMedio - 1] && numeros[posMedio] != numeros[posMedio + 1] )
+        if (numeros[posMedio] != numeros[posMedio - 1] && numeros[posMedio] != numeros[posMedio + 1])
         {
             //Si vos sos distinto a tu anterior y distinto a tu siguiente, entonces el error sos vos
             return numeros[posMedio];

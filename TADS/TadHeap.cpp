@@ -267,10 +267,12 @@ public:
             delete this->vecNodoHeap[tope - 1];
             this->vecNodoHeap[tope - 1] = NULL;
             this->tope--;
-            if(this->esMinHeap){
+            if (this->esMinHeap)
+            {
                 hundirMin(0);
             }
-            else{
+            else
+            {
                 hundirMax(0);
             }
         }
@@ -290,7 +292,6 @@ public:
     float prioridadTope()
     {
         return (this->vecNodoHeap[0])->prioridad;
-
     }
 
     T topDato()
@@ -298,7 +299,8 @@ public:
         return (this->vecNodoHeap[0]->dato);
     }
 
-    int topPrio(){
+    int topPrio()
+    {
         return (this->vecNodoHeap[0]->prioridad);
     }
 
@@ -312,14 +314,16 @@ public:
         return this->tope;
     }
 
-    bool chequearHeap (){
-        for(int i =0; i<this->tope; i++){
+    bool chequearHeap()
+    {
+        for (int i = 0; i < this->tope; i++)
+        {
             float b = this->vecNodoHeap[i]->prioridad;
-            if(b <= 0.1 && b != 0){
+            if (b <= 0.1 && b != 0)
+            {
                 return true;
             }
         }
         return false;
     }
-
 };
