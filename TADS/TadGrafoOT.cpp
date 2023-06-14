@@ -3,115 +3,77 @@
 #include "TadLista.cpp"
 #include "TadHeapOT.cpp"
 using namespace std;
-// grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
-//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER
-// USAR COLA PRIORIDAD PARA PODER IR ELIGIENDO Y QUE TENGA UN ORDEN V LOG, HAY QUE SABER RAPIDO EL NUMERP QUE HAY QUE IR SACANDO, ENTONCES VAMOS A IR AGREGANDO LOS VERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE.LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOLoGICO.REGLA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES TENES 2 PRIORIDADES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO O SEA QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMERO // DE ARISTAS QUE TIENE??
 
-template <class T>
 class Arista
 {
 public:
-    T conexion;
-    Arista(T conexion)
+    int conexion;
+    Arista(int conexion)
     {
         this->conexion = conexion;
     }
 };
 
-template <class T>
 class Grafo
 {
 
 private:
     int cantVertices;
-    int cantAristas;
+    int* grados;
     int tope;                      // la cantidad máxima de vértices que puede tener el grafo
-    T **vertices;                  // vector que adentro tiene punteros a datos tipo T ("Vertice")
+    int *vertices;                  // vector que adentro tiene punteros a datos 
     Lista<int> *lugaresLibres;     // vector con posiciones libres.
-    Lista<Arista<T> *> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
-
-    int buscarPos(T vertice)
-    {
-        for (int i = 0; i < this->tope; i++)
-        {
-            if (this->vertices[i] && *this->vertices[i] == vertice)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
+    Lista<Arista*> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
 
 public:
     Grafo(int tope)
     {
         this->tope = tope;
-        this->vertices = new T *[tope];
+        this->grados = new int[this->tope];
+        this->vertices = new int[this->tope];
         this->lugaresLibres = new Lista<int>(); // Creamos una lista que guarde los lugares libres
-        this->listaAdy = new Lista<Arista<T> *> *[tope];
+        this->listaAdy = new Lista<Arista*> *[tope];
         this->cantVertices = 0;
-        this->cantAristas = 0;
-
-        for (int i = 0; i < tope; i++)
-        {
-            vertices[i] = NULL; // Seteo a null, (Porque es un vector de vectores, sino apunta a basura.)
-        }
 
         for (int i = 0; i < this->tope; i++)
         {
-            this->listaAdy[i] = new Lista<Arista<T> *>(); // Seteo a null
-        }
-
-        for (int i = 0; i < tope; i++)
-        {
+            vertices[i] = 0; 
+            this->listaAdy[i] = new Lista<Arista*>(); // Seteo a null
             this->lugaresLibres->insertarFin(i);
         }
+
     }
 
-    void agregarVertice(T dato)
+    void agregarVertice(int dato)
     {
         int posLibre = this->lugaresLibres->obtenerPpio();
         this->lugaresLibres->borrar(posLibre);
-        this->vertices[posLibre] = new T(dato);
+        this->vertices[posLibre] = dato;
         this->cantVertices++;
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
-    void agregarArista(T origen, T conexion)
+    void agregarArista(int origen, int conexion)
     {
-        int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista<T> *arista = new Arista<T>(conexion);
-
+        int posOrigen = origen-1; // Consigo la pos en la listaAdy
+        Arista *arista = new Arista(conexion);
         this->listaAdy[posOrigen]->insertarPpio(arista);
-        this->cantAristas++;
+        this->grados[conexion-1]++;
     }
-    void borrarVertice(T dato)
+
+    void borrarVertice(int dato)
     {
-        int posBorrar = this->buscarPos(dato);
-        IteradorLista<Arista<T> *> *iter = NULL;
-        for (int i = 0; i < this->cantVertices; i++)
-        {
-            iter = this->listaAdy[i]->obtenerIterador();
-            while (iter->hayElemento())
-            {
-                borrarArista(dato, (iter->obtenerElemento())->conexion);
-                iter->avanzar();
-            }
-        }
-        // bouza : tema ordenes
-        iter = NULL;
-        delete iter;
-        delete this->vertices[posBorrar];
-        this->vertices[posBorrar] = NULL;
+        int posBorrar = dato-1;
+        this->vertices[posBorrar] = 0;
         this->cantVertices--;
         this->lugaresLibres->insertarPpio(posBorrar);
     }
 
-    void borrarArista(T origen, T destino)
+    void borrarArista(int origen, int destino)
     {
-        int posOrigen = this->buscarPos(origen);
+        int posOrigen = origen-1;
 
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
+        IteradorLista<Arista*> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
 
         while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
         {
@@ -123,56 +85,48 @@ public:
         {
 
             this->listaAdy[posOrigen]->borrar(iter->obtenerElemento());
-            this->cantAristas--;
         }
         iter = NULL;
         delete iter;
     }
 
-    Lista<T> *ordenTopologico()
+    Lista<int> *ordenTopologico()
     {
-        int *grados = new int[this->cantVertices];
-        int *cantAristasVertice = new int[this->cantVertices];
-        int aux = 0;
         for (int i = 0; i < this->cantVertices; i++)
         {
-            grados[i] = 0;
+            this->grados[i] = 0;
         }
-        IteradorLista<Arista<T> *> *iter = NULL;
+        IteradorLista<Arista*> *iter = NULL;
         for (int i = 0; i < this->cantVertices; i++)
         {
             iter = this->listaAdy[i]->obtenerIterador();
-            aux = 0;
             while (iter->hayElemento())
             {
-                grados[this->buscarPos(iter->obtenerElemento()->conexion)]++;
-                aux++;
+                this->grados[(iter->obtenerElemento()->conexion)-1]++;
                 iter->avanzar();
             }
-            cantAristasVertice[i] = aux;
         }
         // Hasta aca setteamos el vector "grados"
-        Lista<T> *retorno = new Lista<T>();
-        Heap<T>* miHeap = new Heap<T>(this->cantVertices);
+        Lista<int> *retorno = new Lista<int>();
+        Heap<int>* miHeap = new Heap<int>(this->cantVertices);
         for (int i = 0; i < this->cantVertices; i++)
         {
             
             if (grados[i] == 0)
             {
-                int cantAristas = cantAristasVertice[i];
-                T vertice = *this->vertices[i];
+                int vertice = this->vertices[i];
                 miHeap->encolar(0, vertice); // nivel cero porque son los origenes (sin incidencias)
             }
         }
 
         while (!miHeap->esVacia())
         {
-            nodoHeap<T>* cabezal = miHeap->topDato();
+            nodoHeap<int>* cabezal = miHeap->topDato();
             
             int nivelConexion = cabezal->prioridad + 1;
-            T vertice = cabezal->dato;
+            int vertice = cabezal->dato;
             
-            int posOrigen = buscarPos(vertice); // posOrigen es el padre
+            int posOrigen = vertice -1; // posOrigen es el padre
             retorno->insertarFin(vertice);
             miHeap->desencolar();
             iter = this->listaAdy[posOrigen]->obtenerIterador();
@@ -181,17 +135,21 @@ public:
             //Si el grado una vez borrado es 0 añadimos la conexion
             while (iter->hayElemento())
             {
-                grados[this->buscarPos(iter->obtenerElemento()->conexion)]--;
-                if(grados[this->buscarPos(iter->obtenerElemento()->conexion)] == 0){
+                this->grados[(iter->obtenerElemento()->conexion)-1]--;
+                if(this->grados[iter->obtenerElemento()->conexion -1] == 0){
                     
-                    T vertice = iter->obtenerElemento()->conexion;
+                    int vertice = iter->obtenerElemento()->conexion;
                     miHeap->encolar(nivelConexion, vertice);
                 }
                 iter->avanzar();
             }
         }
 
+
         return retorno;
     }
 };
 
+//eliminar factores repetidos de busacar pos
+//sino dejar de hacerlo generico y hacerlo para int exclusivo y hacer coincidir la pos con el vertice restando uno o agregando un elemento al array de vertices 
+//CUADNO AGREGAMOS ARISTA ADMINISTRAMOS EL GRADO DESDE ALLI ESO MEJORA

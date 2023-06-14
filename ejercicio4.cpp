@@ -4,6 +4,7 @@
 #include "./TADS/TadGrafoDijkstra.cpp"
 using namespace std;
 
+// OJOOOOOOOOO COMO NO TIENE TEMPLATE NO LLEVA LOS <T> NUNCA
 int main(int argc, char const *argv[])
 {
     // Para ingreso de datos
@@ -17,7 +18,7 @@ int main(int argc, char const *argv[])
 
     int cantVertices = 0;
     cin >> cantVertices;
-    Grafo<int> *miGrafo = new Grafo<int>(cantVertices);
+    Grafo *miGrafo = new Grafo(cantVertices);
 
     for (int i = 1; i <= cantVertices; i++)
     {
@@ -64,7 +65,7 @@ int main(int argc, char const *argv[])
 
     cin >> origen;
     cin >> destino;
-    nodoDobleDato<int> *retorno = miGrafo->Dijkstra(origen, destino);
+    nodoDobleDato *retorno = miGrafo->Dijkstra(origen, destino);
 
     if (retorno == NULL) // Significa que NO hay realmente un camino de inicio a fin
     {

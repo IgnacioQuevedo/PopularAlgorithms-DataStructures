@@ -5,34 +5,31 @@
 #define INF 9999
 using namespace std;
 // grafo con lista de adyacencia y una cola prioridad ejercicio 4!!!!!!
-//  GRAFO EN EJERCICIO 5 SE IMPLEMENTA CON ES UN GRAFO DISPEROS DEVILEMNET CONEXO Y DIRIGIDO TENER E EN CUNENTA QUE SOLUCION ECHA ES BASTANATE ADECUABLE ADECUAR REGLAS USAR COLA PRIORIDAD AHORA PARA PODER IR ELIGIENDIO Y QUE TENGNA UN ORDEn DE VLOG DE V HAY QUE SABER RAPIDO EL NUMERITO QUE HAY QUE IR SACANDO VAMOS A IR AGREGANDO LOS vERTICES EN LA COLA PRIORIDAD POR ORDEN ASCENDENTE LA REGLA ES QUE CUMPLA CON LA COLA PRIORIDAD Y SER UN ORDEN TOPOLoGICO Y QUE TENGA LA RELGA DE QUE SEA EN ESE ORDEN NUMERICO ENTONCES tENES 2 PRIORRIDAES QUE NO ES UNA ES UNA DOBLE LA PRIMERA ES EL GRADO OSE A QUE TAN ELJOS ESTA DE LO QUE VOS MPOSTRASTE QUE ES LA RAIZ Y EL SEGUNDODA DATO ES EL NUMEROQUE TIENE PORQUE EL NUMERO MAS CHIQUITO  LA MISMA COLA PRIORIDAD PERO TENER UN PUNTERO QUE TENGA EL NUMERITO DEL VECTORI Y EL GRADO PRIMERO COMPARAR EL GRADO SI VOS SACAS DE UN ELEMENTO DE GRADO 4 CUANDO ENCOLAS A LOS ADYACENTES LE PONEMOS GRADO 4+1 CRECE EN FUNCION  LOS ELEMENTOS
 //  Creamos la clase Arista, que va a almacenar información sobre las aristas del grafo.
 
-template <class T>
 class nodoDobleDato
 {
 
 public:
-    Lista<T>* listaElem;
+    Lista<int>* listaElem;
     int totalCostosDeAristas;
 
-    nodoDobleDato(Lista<T> *listaElem, int totalCostosDeAristas)
+    nodoDobleDato(Lista<int> *listaElem, int totalCostosDeAristas)
     {
         this->listaElem = listaElem;
         this->totalCostosDeAristas = totalCostosDeAristas;
     }
 };
 
-template <class T>
 class Arista
 {
 public:
     int costo;
-    T conexion;
+    int conexion;
     bool existe;
     bool dirigido;
 
-    Arista(T conexion, int costo, bool dirigido, bool existe)
+    Arista(int conexion, int costo, bool dirigido, bool existe)
     {
         this->conexion = conexion;
         this->costo = costo;
@@ -40,7 +37,7 @@ public:
         this->existe = existe;
     }
 
-    Arista(T conexion) // MEPA QUE AL PEDO
+    Arista(int conexion) // MEPA QUE AL PEDO
     {
         this->conexion = conexion;
         this->costo = 0;
@@ -49,71 +46,53 @@ public:
     }
 };
 
-template <class T>
 class Grafo
 {
 
 private:
     int cantVertices;
     int cantAristas;
-    int tope;                      // la cantidad máxima de vértices que puede tener el grafo
-    T **vertices;                  // vector que adentro tiene punteros a datos tipo T ("Vertice")
+    int tope;
+    bool* vis;                      // la cantidad máxima de vértices que puede tener el grafo
+    int *vertices;                  // vector que adentro tiene punteros a datos tipo int ("Vertice")
     Lista<int> *lugaresLibres;     // vector con posiciones libres.
-    Lista<Arista<T> *> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
-
-    int buscarPos(T vertice)
-    {
-
-        for (int i = 0; i < this->tope; i++)
-        {
-            if (this->vertices[i] && *this->vertices[i] == vertice)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
+    Lista<Arista*> **listaAdy; // Un array en el que cada posicion del array me representa un vertice, adentro de cada posicion del array tenemos un puntero a una lista encadenada que esa lista contiene punteros a aristas las cuales a su vez tiene origen  destino definido
 
 public:
     Grafo(int tope)
     {
         this->tope = tope;
-        this->vertices = new T *[tope];
+        this->vis = new bool[this->tope];
+        this->vertices = new int[tope];
         this->lugaresLibres = new Lista<int>(); // Creamos una lista que guarde los lugares libres
-        this->listaAdy = new Lista<Arista<T> *> *[tope];
+        this->listaAdy = new Lista<Arista*> *[tope];
         this->cantVertices = 0;
         this->cantAristas = 0;
 
         for (int i = 0; i < tope; i++)
         {
-            vertices[i] = NULL; // Seteo a null, (Porque es un vector de vectores, sino apunta a basura.)
-        }
-
-        for (int i = 0; i < this->tope; i++)
-        {
-            this->listaAdy[i] = new Lista<Arista<T> *>(); // Seteo a null
-        }
-
-        for (int i = 0; i < tope; i++)
-        {
+            vertices[i] = 0;
+            this->listaAdy[i] = new Lista<Arista*>(); // Seteo a null
             this->lugaresLibres->insertarFin(i);
+            this->vis[i] = false;
         }
+
     }
 
-    void agregarVertice(T dato)
+    void agregarVertice(int dato)
     {
         int posLibre = this->lugaresLibres->obtenerPpio();
         this->lugaresLibres->borrar(posLibre);
-        this->vertices[posLibre] = new T(dato);
+        this->vertices[posLibre] = dato;
         this->cantVertices++;
         
     }
 
     // Pre: Ambos nodos se encuentran en el vector vertices.
-    void agregarArista(T origen, T conexion, int costo, int dirigido, int existe)
+    void agregarArista(int origen, int conexion, int costo, int dirigido, int existe)
     {
-        int posOrigen = this->buscarPos(origen); // Consigo la pos en la listaAdy
-        Arista<T> *aristaSentido1 = new Arista<T>(conexion, costo, dirigido, existe);
+        int posOrigen = origen -1; //PORQUE ESTA TRASLADADO UN LUGAR ATRAS EN EL ARRAY DE VERTICES
+        Arista *aristaSentido1 = new Arista(conexion, costo, dirigido, existe);
 
         if (dirigido)
         {
@@ -122,52 +101,37 @@ public:
         }
         else
         {
-            Arista<T> *aristaSentido2 = new Arista<T>(origen, costo, dirigido, existe);
+            Arista *aristaSentido2 = new Arista(origen, costo, dirigido, existe);
             this->listaAdy[posOrigen]->insertarPpio(aristaSentido1); // Inserte la original
-            int posConexion = this->buscarPos(conexion);
+            int posConexion = conexion -1;
             this->listaAdy[posConexion]->insertarPpio(aristaSentido2);
-            this->cantAristas++;
-            this->cantAristas++;
+            this->cantAristas = this->cantAristas + 2; // porque agregamos 2 aristas ya que es no dirigido
         }
         
 
     }
 
-    void borrarVertice(T dato)
+    void borrarVertice(int dato)
     {
-        int posBorrar = this->buscarPos(dato);
-        int i = 0;
-        IteradorLista<Arista<T> *> *iter = NULL;
-        for (i = 0; i < this->cantVertices; i++)
-        {
-            iter = this->listaAdy[i]->obtenerIterador();
-            while (iter->hayElemento())
-            {
-                borrarArista(dato, iter->obtenerElemento()->conexion);
-                iter->avanzar();
-            }
-        }
-        // bouza : tema ordenes
-        iter = NULL;
-        delete iter;
-        delete this->vertices[posBorrar];
-        this->vertices[posBorrar] = NULL;
+        int posBorrar = dato-1;
+        this->vis[posBorrar] = true;
+        this->vertices[posBorrar] = 0;
         this->cantVertices--;
         this->lugaresLibres->insertarPpio(posBorrar);
     }
 
-    void borrarArista(T origen, T destino)
+    void borrarArista(int origen, int destino)
     {
         bool sdaVuelta = false;
         borrarAristaAux(origen, destino, sdaVuelta);
     }
-    void borrarAristaAux(T origen, T destino, bool sdaVuelta)
+    void borrarAristaAux(int origen, int destino, bool sdaVuelta)
     {
-        int posOrigen = this->buscarPos(origen);
+        int posOrigen = origen-1;
  
         if (posOrigen != -1) // Porque como recorro todo, entonces voy a recorrer tambien la posible pos ya borrada. Incluso los vertices borrados.
         {
-            IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
+            IteradorLista<Arista*> *iter = this->listaAdy[posOrigen]->obtenerIterador(); // iter es un puntero a la lista que apunta a la primera arista
 
             while (iter->hayElemento() && (iter->obtenerElemento())->conexion != destino)
             {
@@ -198,88 +162,77 @@ public:
         }
     }
 
-    nodoDobleDato<T> *Dijkstra(T origen, T destino)
+    nodoDobleDato *Dijkstra(int origen, int destino)
     {
         int *dist = new int[this->tope];
-        bool *vis = new bool[this->tope];
         int *ant = new int[this->tope];
 
         bool esMinHeap = true;
-        Heap<T> *miHeap = new Heap<T>(this->cantAristas, esMinHeap); // El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
-        Lista<T>* listaElem = new Lista<T>();
+        Heap<int> *miHeap = new Heap<int>(this->cantAristas, esMinHeap); // El heap es el encargado de darle el siguiente vertice a estudiar. Suplanta la idea de PosNoVisMenorCosto.
+        Lista<int>* listaElem = new Lista<int>();
         int totalCostosDeAristas = 0;
-        nodoDobleDato<T> *retorno = new nodoDobleDato<T>(listaElem, totalCostosDeAristas);
+        nodoDobleDato *retorno = new nodoDobleDato(listaElem, totalCostosDeAristas);
 
         int posOrigen = 0;
         for (int i = 0; i < this->tope; i++)
         {
             dist[i] = INF;
-            vis[i] = false;
             ant[i] = -1;
         }
 
-        posOrigen = this->buscarPos(origen);
+        posOrigen = origen-1;
         dist[posOrigen] = 0;
         int nuevaDist = 0;
 
         miHeap->encolar(nuevaDist, origen);
-        IteradorLista<Arista<T> *> *iter = this->listaAdy[posOrigen]->obtenerIterador();
+        IteradorLista<Arista *> *iter = this->listaAdy[posOrigen]->obtenerIterador();
 
         while(!miHeap->esVacia()){
-         
-            T dato = miHeap->topDato();
-            posOrigen = buscarPos(miHeap->topDato()); // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
-            Arista<T> *aristaActual = NULL;           // Será cada arista recorrida por el iter.
+            
+            int dato = miHeap->topDato();
+            posOrigen = miHeap->topDato() -1; // Consigo la pos del primer elemento. (Por eso es importante el encolar de arriba).
+            Arista *aristaActual = NULL;           // Será cada arista recorrida por el iter.
             iter = this->listaAdy[posOrigen]->obtenerIterador();
             miHeap->desencolar(); // Una vez conseguido el elemento siguiente a estudiar, lo desencolo.
     
             while (iter->hayElemento())
             {
+                //guardar buscar pos en una variable 
                 aristaActual = iter->obtenerElemento(); // Consigo una de las arista del vertice particular.
                 nuevaDist = dist[posOrigen] + aristaActual->costo;   
-                if (!vis[this->buscarPos(aristaActual->conexion)] && aristaActual->existe && nuevaDist < dist[this->buscarPos(aristaActual->conexion)]) // Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
+                int posBuscada = (aristaActual->conexion) -1;
+                if (!(this->vis[posBuscada]) && aristaActual->existe && nuevaDist < dist[posBuscada]) // Si el vertice "destino" (conexion) aún no fue visitado, si la arista existe ("True") y si la distancia a ese vertice "destino" es mas chica que la anterior. Ahi si me meto.
                 {
                     miHeap->encolar(nuevaDist, aristaActual->conexion);
-                    dist[this->buscarPos(aristaActual->conexion)] = nuevaDist;
-                    ant[this->buscarPos(aristaActual->conexion)] = posOrigen;
+                    dist[posBuscada] = nuevaDist;
+                    ant[posBuscada] = posOrigen;
                 }
                 iter->avanzar();
             }
-            vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
+            this->vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
         
         }
         // AFUERA DEL WHILE,ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
         //--------------------------------------------------------------------
 
-        int posAnt = this->buscarPos(destino); // Es la posAnt del vertice anterior al de destino.
-
+        int posAnt = destino -1; // Es la posAnt del vertice anterior al de destino.
         while (ant[posAnt] != -1)
         { // cuando el anterior a esa posicion sea -1 significa: --> o que sos el primero o no existe el camino
 
-            retorno->listaElem->insertarPpio(*this->vertices[posAnt]); //Insertamos al ppio, asi queda en orden, EL vector ant, contiene la pos del vertice anterior al parado
+            retorno->listaElem->insertarPpio(this->vertices[posAnt]); //Insertamos al ppio, asi queda en orden, EL vector ant, contiene la pos del vertice anterior al parado
             posAnt = ant[posAnt];                         // Actualizo la posAnt a la anterior de la misma.
         }
 
-        if(*this->vertices[posAnt] != origen){ //Si la posAnt no es el origen, significa que el while salió antes lo que significa que no se encontró un valor anterior para ese valor por ende -> NO EXISTE CAMINO
+        if(this->vertices[posAnt] != origen){ //Si la posAnt no es el origen, significa que el while salió antes lo que significa que no se encontró un valor anterior para ese valor por ende -> NO EXISTE CAMINO
             return NULL;      
         }
         // Si es el origen, entonce se encontró el camino total, por lo tanto 10/10
         retorno->listaElem->insertarPpio(origen);
-        retorno->totalCostosDeAristas = dist[this->buscarPos(destino)];
+        retorno->totalCostosDeAristas = dist[destino-1];
 
         return retorno;
     }
-
-    void ordenTopologico(){
-
-        
-        
-
-
-
-
-    }
-
-
-
 };
+
+//IMPLE
+// SINO HACERLO EXCLUSIVO
