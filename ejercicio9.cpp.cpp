@@ -4,21 +4,6 @@
 #include "./TADS/TadHeap.cpp"
 using namespace std;
 
-
-long long calcularCombinatoria(int n, int k){ //Formula de la combinatoria: 10c2 ---> (10!)/(2!*(10-2)) ---> (10x9x8x...x1)/(2x1)*(8)---> Se te cancelan 10x9/2*1 --> y esto es igual a (10/1)*(9/2)
-                                              
-    long long res = 1;
-    for (int i = 0; i < k; i++)
-    {
-        res = res * (n-i); // Esto genera el numerador,la primera run va a quedar: 10
-        res = res / (i+1); // esto va a generar el divisor, la primera run va a quedar 10/1
-    }
-   
-    return res;
-    //Al finalizar la run quedaria: (10*9)/(1*2) -->Esto equivale a lo representado bien arriba del todo.
-}
-
-
 int main(int argc, char const *argv[])
 {
     // Para ingreso de datos
@@ -30,31 +15,47 @@ int main(int argc, char const *argv[])
     ofstream myFile2("./out.txt");
     cout.rdbuf(myFile2.rdbuf());
 
-    int paraKe = 0; 
-    int cantCombinatorias = 0;
-    
-    cin >> paraKe;
-    cin >> cantCombinatorias;
+    int filasPascal = 0;
+    int cantCombinaciones = 0;
+    // Si pongo un for aca meto orden P, tonce asi no va
+    cin >> filasPascal;       // N
+    cin >> cantCombinaciones; // P
 
-    //Esto genera nCk --> Combinaciones de n para k
-    int n = 0; 
-    int k = 0; 
+    int *pascal = new int[filasPascal + 1]; // Porque arranca en nivel 0
 
-    //Ejemplo: Le paso 10c2
-    for (int i = 0; i < cantCombinatorias; i++)
-    {
-        cin >> n;
-        cin >> k;
-        cout << calcularCombinatoria(n,k) << endl;
+    int exponenteCombinatoria = 0; // N de la combinatoria
+    int baseCombinatoria = 0;      // Base de la combinatoria
+    pascal[0] = 1;
+    int filaActual = 0;
+    cin >> exponenteCombinatoria; // Te da hasta la fila del triangulo que vas a estudiar
+    cin >> baseCombinatoria;
+
+    while(cantCombinaciones != 0){
+        if (filaActual == exponenteCombinatoria)
+        { // Significa que estas parado en la fila pedida y ahora podes devolver el valor.
+            cout << pascal[baseCombinatoria] << endl;
+            cin >> exponenteCombinatoria; // Te da hasta la fila del triangulo que vas a estudiar
+            cin >> baseCombinatoria;
+            cantCombinaciones--;
+        }
+
+        if (exponenteCombinatoria != filaActual)
+        {
+            pascal[exponenteCombinatoria] = 1; // Ya dejas pronta la siguiente linea a actualizar
+            filaActual++;                      // Significa que te moviste una fila para adelante pero aun no llegaste a la fila pedida
+            for (int j = filaActual; j >= 0; j--) // Te crea el array de la fila HASTA donde estas parado.
+            {
+                if (j - 1 > 0)
+                { // significa que NO estas en el origen
+                    pascal[j - 1] = pascal[j - 1] + pascal[j-2];
+                }
+            }
+        }
+        // FILA ANTERIOR MIRALO COMO UN i --> El i ESLA FILA DONDE TOY PARADO
+
+        // PARA LA ACTUALIZACION DEL ARRAY
+
+        // Una vez salido del for, actualizaste el array a la fila actual.
     }
-
-
-
-
-
-
-
-
-
     return 0;
 }
