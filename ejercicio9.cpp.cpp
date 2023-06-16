@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 
     int filasPascal = 0;
     int cantCombinaciones = 0;
-    // Si pongo un for aca meto orden P, tonce asi no va
+
     cin >> filasPascal;       // N
     cin >> cantCombinaciones; // P
 

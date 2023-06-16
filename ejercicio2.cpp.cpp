@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "./TADS/TadHeap.cpp"
+#include "./TADS/TadAvl.cpp"
 using namespace std;
 
 int main(int argc, char const *argv[])
@@ -15,49 +15,23 @@ int main(int argc, char const *argv[])
     ofstream myFile2("./out.txt");
     cout.rdbuf(myFile2.rdbuf());
 
-    int cantReservas = 0;
-    float personasXGrupo = 0;
-    string viajeros;
-    string pasaporte;
-    int cantvuelos = 0;
-    float promedioGrupo = 0;
-    int cantVuelosGrupo = 0;
-
-    cin >> cantReservas;
-    bool esMinHeap = false;
-    Heap<string> *miHeap = new Heap<string>(cantReservas, esMinHeap);
-
-    for (int i = 0; i < cantReservas; i++)
+    int cantPalabras = 0;
+    cin >> cantPalabras;
+    int b=0;
+    Avl<string> *miArbol = new Avl<string>(cantPalabras);
+    
+    string palabra = "";
+    for (int i = 0; i < cantPalabras; i++)
     {
-        cin >> personasXGrupo;
-        for (int j = 0; j < personasXGrupo; j++)
-        {
-            cin >> pasaporte;
-            pasaporte = pasaporte + " ";
-            cin >> cantvuelos;
-            viajeros = viajeros + pasaporte;
-            cantVuelosGrupo = cantVuelosGrupo + cantvuelos;
-        }
-        promedioGrupo = cantVuelosGrupo / personasXGrupo;
-        miHeap->encolar(promedioGrupo, viajeros);
-        cantVuelosGrupo = 0;
-        viajeros.erase(); // VACIA LA VARIABLE STRING.
+        palabra = "";
+        cin >> palabra;
+        miArbol->insertar(palabra);
     }
 
-    while (!miHeap->esVacia())
-    {
-        promedioGrupo = miHeap->prioridadTope();
-        viajeros = miHeap->topDato();
-        miHeap->desencolar();
-        cout.precision(2);
-        if (promedioGrupo == static_cast<int>(promedioGrupo))
-        {
-            cout << static_cast<int>(promedioGrupo) << " " << viajeros << endl;
-        }
-        else
-        {
-            cout << fixed << promedioGrupo << " " << viajeros << endl;
-        }
+    while(!miArbol->esVacio()){
+        nodoAvl<string> *nodoMayor = miArbol->borrarMayor();
+        cout << nodoMayor->dato << " " << nodoMayor->apariciones << endl;
     }
+
     return 0;
 }
