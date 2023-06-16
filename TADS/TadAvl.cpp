@@ -77,8 +77,8 @@ private:
         nodoActual->der = aux;       // Lo colocamos a la der del nodoActual que queriamos rotar
 
         // Actualizamos las alturas
-        nodoActual->altura = this->max(altura(nodoActual->izq), altura(nodoActual->der)) + 1;
-        nuevaRaiz->altura = this->max(altura(nuevaRaiz->der), altura(nuevaRaiz->izq)) + 1;
+        nodoActual->altura = 1+ this->max(altura(nodoActual->izq), altura(nodoActual->der));
+        nuevaRaiz->altura = 1+ this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
 
         return nuevaRaiz;
     }
@@ -93,19 +93,41 @@ private:
         nodoActual->izq = aux;       // Lo colocamos a la izq del nodoActual que queriamos rotar
 
         // Actualizamos las alturas de cada nodo
-        nodoActual->altura = this->max(altura(nodoActual->izq), altura(nodoActual->der));
-        nuevaRaiz->altura = this->max(altura(nuevaRaiz->der), altura(nuevaRaiz->izq));
+        nodoActual->altura = 1+ this->max(altura(nodoActual->izq), altura(nodoActual->der));
+        nuevaRaiz->altura = 1+ this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
 
         return nuevaRaiz;
     }
 
-    void reordenar(nodoAvl<T> *&arbol, T dato)
+    void insertarRec(nodoAvl<T> *&arbol, T dato)
     {
-        int balance = factorDeBalanceo(arbol);
-        if (balance >= -1 && balance <= 1)
+        if (arbol == NULL)
         {
+            arbol = new nodoAvl<T>(dato);
+            arbol->apariciones++;
+            this->cantElem++;
             return;
         }
+        else if (arbol->dato > dato)
+        {
+            insertarRec(arbol->izq, dato);
+            return;
+        }
+        else if (arbol->dato < dato)
+        {
+            insertarRec(arbol->der, dato);
+            return;
+        }
+        else
+        {
+            arbol->apariciones++;
+            return;
+        }
+
+        // Actualizamos las alturas
+        arbol->altura = 1 + this->max(altura(arbol->izq), altura(arbol->der));
+
+         int balance = factorDeBalanceo(arbol);
 
         if (balance < -1 && dato < arbol->izq->dato)
         {
@@ -138,56 +160,9 @@ private:
             arbol = rotarIzq(arbol);
             return;
         }
+        
     }
-
-    void insertarRec(nodoAvl<T> *&arbol, T dato)
-    {
-
-        if (arbol == NULL)
-        {
-            arbol = new nodoAvl<T>(dato);
-            arbol->apariciones++;
-            this->cantElem++;
-        }
-        else if (arbol->dato > dato)
-        {
-            insertarRec(arbol->izq, dato);
-        }
-        else if (arbol->dato < dato)
-        {
-            insertarRec(arbol->der, dato);
-        }
-        else
-        {
-            arbol->apariciones++;
-        }
-
-        // Actualizamos las alturas
-        arbol->altura = 1 + this->max(altura(arbol->izq), altura(arbol->der));
-
-        reordenar(arbol, dato);
-    }
-
-    nodoAvl<T> *borrarMayorRec(nodoAvl<T> *&arbol)
-    {
-        if (arbol->der == NULL)
-        {
-            if (arbol->apariciones == 1)
-            {
-                nodoAvl<T> *aux = new nodoAvl<T>(arbol->dato);
-                aux->apariciones = arbol->apariciones;
-                delete arbol;
-                arbol = NULL;
-                this->cantElem--;
-                return aux;
-            }
-        }
-        else
-        {
-            borrarMayorRec(arbol->der);
-        }
-    }
-
+    
 public:
     Avl(int largoDado)
     {
@@ -201,12 +176,19 @@ public:
         this->insertarRec(this->arbol, dato);
     }
 
-    nodoAvl<T> *borrarMayor()
+    nodoAvl<T>* inOrder()
     {
-        nodoAvl<T> *nodo = borrarMayorRec(this->arbol);
-        T dato = nodo->dato;
-        this->reordenar(this->arbol, dato);
-        return nodo;
+        inOrderRec(this->arbol);
+    }
+   
+    void inOrderRec(nodoAvl<T> *&arbol)
+    {
+        if (arbol == NULL){
+            return;
+        }
+        inOrderRec(arbol->der);
+        cout << arbol->dato << " " << arbol->apariciones << endl;
+        inOrderRec(arbol->izq);
     }
 
     bool esVacio()

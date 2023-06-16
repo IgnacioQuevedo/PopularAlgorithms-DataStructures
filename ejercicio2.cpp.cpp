@@ -27,11 +27,7 @@ int main(int argc, char const *argv[])
         cin >> palabra;
         miArbol->insertar(palabra);
     }
-
-    while(!miArbol->esVacio()){
-        nodoAvl<string> *nodoMayor = miArbol->borrarMayor();
-        cout << nodoMayor->dato << " " << nodoMayor->apariciones << endl;
-    }
+    miArbol->inOrder();
 
     return 0;
 }
