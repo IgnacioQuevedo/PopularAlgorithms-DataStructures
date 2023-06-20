@@ -146,6 +146,7 @@ int main(int argc, char const *argv[])
     cin >> columnas;
 
     char **mapa = new char *[filas];
+    coordenadas *posBedelia = new coordenadas(0, 0);
 
     for (int i = 0; i < filas; i++)
     {
@@ -156,12 +157,14 @@ int main(int argc, char const *argv[])
         {
             // guardar bedelia aca
             cin >> mapa[i][j];
+            if(mapa[i][j] == 'B'){
+                posBedelia->x = i;
+                posBedelia->y = j;
+            }
         }
     }
 
     int cantPedidos, xOrigen, yOrigen, xDestino, yDestino;
-
-    coordenadas *posBedelia = ubicarBedelia(mapa, filas, columnas); // lo fletamos despues
     int sumaCamino = 0;
 
     cin >> cantPedidos;
