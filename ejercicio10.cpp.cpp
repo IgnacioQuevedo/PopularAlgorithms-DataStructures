@@ -4,8 +4,8 @@
 #include "./TADS/TadLista.cpp"
 using namespace std;
 
-int vX[4] {-1, 0, 1, 0}; //Movimientos de x y de y en conjunto forman movs hacia der izq arriba y abajo
-int vY[4] {0, 1, 0, -1};
+int vX[4]{-1, 0, 1, 0}; // Movimientos de x y de y en conjunto forman movs hacia der izq arriba y abajo
+int vY[4]{0, 1, 0, -1};
 
 class coordenadas
 {
@@ -21,11 +21,15 @@ public:
     }
 };
 
-coordenadas* ubicarBedelia(char** mapa, int filas, int columnas){
-    coordenadas* retorno = new coordenadas(0,0);
-    for(int i = 0; i < filas; i++){
-        for(int j = 0; j<columnas; j++){
-            if(mapa[i][j] == 'B'){
+coordenadas *ubicarBedelia(char **mapa, int filas, int columnas)
+{
+    coordenadas *retorno = new coordenadas(0, 0);
+    for (int i = 0; i < filas; i++)
+    {
+        for (int j = 0; j < columnas; j++)
+        {
+            if (mapa[i][j] == 'B')
+            {
                 retorno->x = i;
                 retorno->y = j;
                 return retorno;
@@ -34,89 +38,96 @@ coordenadas* ubicarBedelia(char** mapa, int filas, int columnas){
     }
 }
 
-int darValor(char elemento){
-    if(elemento == 'C' || elemento == 'B'){
+int darValor(char elemento)
+{
+    if (elemento == 'C' || elemento == 'B')
+    {
         return 1;
     }
-    else if(elemento == 'P'){
+    else if (elemento == 'P')
+    {
         return 0;
     }
 }
 
-bool esAceptable(char**& mapa, coordenadas* cordActual, bool**& vis, int filas, int columnas){
-    return cordActual->x >= 0 && cordActual->y >= 0 && cordActual->x < filas && cordActual->y < columnas
-    && !vis[cordActual->x][cordActual->y] && mapa[cordActual->x][cordActual->y] != 'P';
+bool esAceptable(char **&mapa, coordenadas *cordActual, bool **&vis, int filas, int columnas)
+{
+    return cordActual->x >= 0 && cordActual->y >= 0 && cordActual->x < filas && cordActual->y < columnas && !vis[cordActual->x][cordActual->y];
 }
 
-void cMasCorto(char**& mapa, const int &filas, const int &columnas, coordenadas* cordActual, coordenadas*& destino, bool**& vis, Lista<coordenadas*>*& caminoActual, Lista<coordenadas*>*& caminoOptimo, coordenadas*& posBedelia){
-    //Definimos un caso base (llegar al destino) igual que en arboles
-    if(cordActual->x == destino->x && cordActual->y == destino->y && mapa[posBedelia->x][posBedelia->y] == true){
-        if(caminoOptimo == NULL || caminoActual->cantidadElementos() < caminoOptimo->cantidadElementos()  && vis[posBedelia->x][posBedelia->y] == true){
-            //Si entro acá significa que encontré una mejor solución que la anterior
-            if(caminoOptimo != NULL){
+void cMasCorto(char **&mapa, const int &filas, const int &columnas, coordenadas *cordActual, coordenadas *&destino, bool **&vis, Lista<coordenadas *> *&caminoActual, Lista<coordenadas *> *&caminoOptimo, coordenadas *&posBedelia)
+{
+    // Definimos un caso base (llegar al destino) igual que en arboles
+    if (cordActual->x == destino->x && cordActual->y == destino->y)
+    {
+        if ((!caminoOptimo || caminoActual->cantidadElementos() < caminoOptimo->cantidadElementos()) && vis[posBedelia->x][posBedelia->y] == true)
+        {
+            // Si entro acá significa que encontré una mejor solución que la anterior
+            if (caminoOptimo != NULL)
+            {
                 caminoOptimo->vaciar();
             }
-            else{
-                caminoOptimo = new Lista<coordenadas*>();
+            else
+            {
+                caminoOptimo = new Lista<coordenadas *>();
             }
-            IteradorLista<coordenadas*>* iter = caminoActual->obtenerIterador();
-            while(iter->hayElemento()){
-                coordenadas* elemento = iter->obtenerElemento();
+            IteradorLista<coordenadas *> *iter = caminoActual->obtenerIterador();
+            while (iter->hayElemento())
+            {
+                coordenadas *elemento = iter->obtenerElemento();
                 caminoOptimo->insertarFin(new coordenadas(elemento->x, elemento->y));
                 iter->avanzar();
             }
         }
     }
-    else{
-        if(esAceptable(mapa, cordActual, vis, filas, columnas)){
+    else
+    {
+        if (esAceptable(mapa, cordActual, vis, filas, columnas))
+        {
             vis[cordActual->x][cordActual->y] = true;
-            for(int d = 0; d < 4; d++){
-                coordenadas* cordNueva = new coordenadas(cordActual->x + vX[d], cordActual->y + vY[d]);
+            //             int vX[4] {-1, 0, 1, 0};
+            //             int vY[4] {0, 1, 0, -1};
+            for (int d = 0; d < 4; d++)
+            {
+                coordenadas *cordNueva = new coordenadas(cordActual->x + vX[d], cordActual->y + vY[d]);
                 caminoActual->insertarFin(cordNueva);
                 cMasCorto(mapa, filas, columnas, cordNueva, destino, vis, caminoActual, caminoOptimo, posBedelia);
                 caminoActual->borrarFinal(); // va borrando el final del camino por si la recursion encuentra mejor camino
-                delete cordNueva; //Para no dejar memoria colgada
+                delete cordNueva;            // Para no dejar memoria colgada
             }
             vis[cordActual->x][cordActual->y] = false;
         }
     }
-    IteradorLista<coordenadas*>* iter = caminoActual->obtenerIterador();
-    while(iter->hayElemento()){
-        coordenadas* elemento = iter->obtenerElemento();
-        if(elemento->x == 3 && elemento->y == 1){
-            int a = 0;
-        }
-        iter->avanzar();
-    }
 }
 
+Lista<coordenadas *> *caminoMasCorto(char **mapa, int filas, int columnas, coordenadas *origen, coordenadas *destino, coordenadas *posBedelia)
+{
+    bool **vis = new bool *[filas];
 
-Lista<coordenadas*>* caminoMasCorto(char** mapa, int filas, int columnas, coordenadas* origen, coordenadas* destino, coordenadas* posBedelia){
-    bool** vis = new bool*[filas];
-
-    for(int i = 0; i<filas; i++){
+    for (int i = 0; i < filas; i++)
+    {
         vis[i] = new bool[columnas];
-        for(int j =0; j < columnas; j++){
-            if(mapa[i][j] != 'P'){
+        for (int j = 0; j < columnas; j++)
+        {
+            if (mapa[i][j] != 'P')
+            {
                 vis[i][j] = false;
             }
-            else{
+            else
+            {
                 vis[i][j] = true;
             }
         }
     }
 
-    Lista<coordenadas*>* caminoActual = new Lista<coordenadas*>();
+    Lista<coordenadas *> *caminoActual = new Lista<coordenadas *>();
     caminoActual->insertarPpio(new coordenadas(origen->x, origen->y));
-    Lista<coordenadas*>* caminoOptimo = NULL;
+    Lista<coordenadas *> *caminoOptimo = NULL;
 
     cMasCorto(mapa, filas, columnas, origen, destino, vis, caminoActual, caminoOptimo, posBedelia);
 
-    int caca = 0;
     return caminoOptimo;
-
 }
-
 
 int main(int argc, char const *argv[])
 {
@@ -134,39 +145,44 @@ int main(int argc, char const *argv[])
     cin >> filas;
     cin >> columnas;
 
-    char** mapa = new char*[filas];
+    char **mapa = new char *[filas];
 
-    for(int i = 0; i<filas; i++){
+    for (int i = 0; i < filas; i++)
+    {
 
         mapa[i] = new char[columnas];
 
-        for(int j = 0; j < columnas; j++){
-            //guardar bedelia aca
+        for (int j = 0; j < columnas; j++)
+        {
+            // guardar bedelia aca
             cin >> mapa[i][j];
         }
     }
 
     int cantPedidos, xOrigen, yOrigen, xDestino, yDestino;
 
-    coordenadas* posBedelia = ubicarBedelia(mapa, filas, columnas); 
+    coordenadas *posBedelia = ubicarBedelia(mapa, filas, columnas); // lo fletamos despues
     int sumaCamino = 0;
 
     cin >> cantPedidos;
 
-    for(int i = 0; i<cantPedidos; i++){
-        cin >> yOrigen >> xOrigen >> yDestino >> xDestino;
-        coordenadas* origen = new coordenadas(xOrigen-1, yOrigen-1);
-        coordenadas* destino = new coordenadas(xDestino-1, yDestino-1);
+    for (int i = 0; i < cantPedidos; i++)
+    {
+        cin >> yOrigen >> xOrigen;
+        coordenadas *origen = new coordenadas(xOrigen - 1, yOrigen - 1);
+        cin >> yDestino >> xDestino;
+        coordenadas *destino = new coordenadas(xDestino - 1, yDestino - 1);
 
-        Lista<coordenadas*>* caminoMasOptimo = caminoMasCorto(mapa, filas, columnas, origen, destino, posBedelia);
-        IteradorLista<coordenadas*>* iter = caminoMasOptimo->obtenerIterador();
-        sumaCamino = 0;
-        while(iter->hayElemento()){
-            coordenadas* elemento = iter->obtenerElemento();
-            sumaCamino += darValor(mapa[elemento->x][elemento->y]);
-            iter->avanzar();
+        Lista<coordenadas *> *caminoMasOptimo = caminoMasCorto(mapa, filas, columnas, origen, destino, posBedelia);
+        if (caminoMasOptimo == NULL)
+        {
+            sumaCamino = 0;
         }
-        cout << sumaCamino;
+        else
+        {
+            sumaCamino = caminoMasOptimo->cantidadElementos();
+        }
+        cout << sumaCamino << endl;
     }
 
     return 0;
