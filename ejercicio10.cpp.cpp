@@ -38,18 +38,6 @@ coordenadas *ubicarBedelia(char **mapa, int filas, int columnas)
     }
 }
 
-int darValor(char elemento)
-{
-    if (elemento == 'C' || elemento == 'B')
-    {
-        return 1;
-    }
-    else if (elemento == 'P')
-    {
-        return 0;
-    }
-}
-
 bool esAceptable(char **&mapa, coordenadas *cordActual, bool **&vis, int filas, int columnas)
 {
     return cordActual->x >= 0 && cordActual->y >= 0 && cordActual->x < filas && cordActual->y < columnas && !vis[cordActual->x][cordActual->y];
@@ -85,8 +73,7 @@ void cMasCorto(char **&mapa, const int &filas, const int &columnas, coordenadas 
         if (esAceptable(mapa, cordActual, vis, filas, columnas))
         {
             vis[cordActual->x][cordActual->y] = true;
-            //             int vX[4] {-1, 0, 1, 0};
-            //             int vY[4] {0, 1, 0, -1};
+            
             for (int d = 0; d < 4; d++)
             {
                 coordenadas *cordNueva = new coordenadas(cordActual->x + vX[d], cordActual->y + vY[d]);
