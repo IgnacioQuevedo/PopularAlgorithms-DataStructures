@@ -4,22 +4,20 @@
 #include "./TADS/TadGrafoDijkstra.cpp"
 using namespace std;
 
-// OJOOOOOOOOO COMO NO TIENE TEMPLATE NO LLEVA LOS <T> NUNCA
 int main(int argc, char const *argv[])
 {
-    // Para ingreso de datos
-    // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
-    ifstream myFile("./in.txt");
-    cin.rdbuf(myFile.rdbuf());
+    // // Para ingreso de datos
+    // // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
+    // ifstream myFile("./in.txt");
+    // cin.rdbuf(myFile.rdbuf());
 
-    // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    ofstream myFile2("./out.txt");
-    cout.rdbuf(myFile2.rdbuf());
+    // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    // ofstream myFile2("./out.txt");
+    // cout.rdbuf(myFile2.rdbuf());
 
     int cantVertices = 0;
     cin >> cantVertices;
     Grafo *miGrafo = new Grafo(cantVertices);
-
     for (int i = 1; i <= cantVertices; i++)
     {
         miGrafo->agregarVertice(i);
@@ -28,25 +26,18 @@ int main(int argc, char const *argv[])
     int cantAristas = 0;
     cin >> cantAristas;
 
-    int origen = 0;
-    int destino = 0;
-    int costo = 0;
-    int dirigido = 0;
-    int existe = 0;
+    int origen,destino,costo,dirigido,existe;
+
     for (int i = 0; i < cantAristas; i++)
     {
-        cin >> origen;
-        cin >> destino;
-        cin >> costo;
-        cin >> dirigido;
+        cin >> origen >> destino >> costo >> dirigido;
         dirigido = abs(dirigido - 2); // Si es 0 es NO DIRIGIDO, y si es 1 es DIRIGIDO
         cin >> existe;
-
         miGrafo->agregarArista(origen, destino, costo, dirigido, existe);
     }
 
-    int cantCiudadNoHabi = 0;
-    int ciudadABorrar = 0;
+    int cantCiudadNoHabi,ciudadABorrar;
+
     cin >> cantCiudadNoHabi;
     for (int i = 0; i < cantCiudadNoHabi; i++)
     {
@@ -58,13 +49,11 @@ int main(int argc, char const *argv[])
     cin >> cantCarreterasNohabi;
     for (int i = 0; i < cantCarreterasNohabi; i++)
     {
-        cin >> origen;
-        cin >> destino;
+        cin >> origen >> destino;
         miGrafo->borrarArista(origen, destino);
     }
 
-    cin >> origen;
-    cin >> destino;
+    cin >> origen >> destino;
     nodoDobleDato *retorno = miGrafo->Dijkstra(origen, destino);
 
     if (retorno == NULL) // Significa que NO hay realmente un camino de inicio a fin
@@ -87,6 +76,15 @@ int main(int argc, char const *argv[])
             iter->avanzar();
         }
         cout << "]";
+        iter = NULL;
+        delete iter;
     }
+
+    //Liberacion de memoria
+    miGrafo->destruir();
+    retorno->listaElem->destruirLista();
+    delete miGrafo;
+    delete retorno;
+
     return 0;
 }

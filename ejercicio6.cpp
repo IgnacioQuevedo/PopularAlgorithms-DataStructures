@@ -16,7 +16,7 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
     if ((posMedio % 2) == 0)
     {
 
-        //Si vos sos par, entonces hay una cantidad impar de personitas atras tuyas.
+        //Si vos sos par, entonces hay una cantidad impar de elementos atras tuyo.
 
         if (numeros[posMedio] != numeros[posMedio - 1] && numeros[posMedio] != numeros[posMedio + 1])
         {
@@ -26,16 +26,15 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
 
         if (numeros[posMedio] == numeros[posMedio - 1])
         {
-            //Atras tuyo hay una cantidad impar de personas.
-            //Si vos sos igual que tu anterior, significa que dejaste una cantidad par de parejitas atras tuyo. Entonces vos sabes que
-            //El error esta a la derecha
+            //Atras tuyo hay una cantidad impar de elementos.
+            //Si vos sos igual que tu anterior, significa que dejaste una cantidad par de parejas de elementos atras tuyo. Entonces->ERROR EN DERECHA
             medioAnterior = medio;
             nuevoMedio = medio + (largo - medio)/2;
             return encontrarElem(numeros, nuevoMedio,medio, largo);
         }
         else
         {
-            //Si vos sos distinto que tu anterior, significa que hay una cantidad impar de personitas solas, 
+            //Si vos sos distinto que tu anterior, significa que hay una cantidad impar de elementos solos, 
             //entonces sabes que tenes que ir por izquierda.
             
             nuevoMedio = medioAnterior + (medio - medioAnterior)/2;
@@ -46,7 +45,7 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
     // Si es impar
     else
     {
-        //Si sos impar, significa que atras tuyo hay una cantidad par de personitas.
+        //Al ser impar, significa que atras tuyo hay una cantidad par de elementos.
 
         if (numeros[posMedio] != numeros[posMedio - 1] && numeros[posMedio] != numeros[posMedio + 1] )
         {
@@ -56,8 +55,8 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
 
         if (numeros[posMedio] == numeros[posMedio - 1])
         {
-            //Si vos sos igual a tu anterior significa que algun anterior no tiene a su parejita correcta. Ya que sin contarte a vos, atras tuyo hay una cantidad par de personitas.
-            //Si vos te robas a una de ellas, implica que alguna personita quede sola, ya que dejas una cantidad impar de personitas libres.
+            //Si vos sos igual a tu anterior significa que algun anterior no tiene a su elemento pareja correcto. Ya que sin contarte a vos, atras tuyo hay una cantidad par de elementos.
+            //Si vos ocupas a una de ellas, implica que algun elemento queda solo, ya que dejas una cantidad impar de elementos libres.
             //Entonces el error esta a la izquierda
 
             nuevoMedio = medioAnterior + (medio - medioAnterior)/2;
@@ -67,7 +66,7 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
         }
         else
         {
-            //Si vos sos distinto a tu anterior, significa que la cantidad par de personitas estan todas bien juntas.
+            //Si vos sos distinto a tu anterior, significa que la cantidad par de elementos estan todas bien juntas.
             //Entonces el error esta a tu derecha
             medioAnterior = medio;
             nuevoMedio = medio + (largo - medio)/2;
@@ -80,16 +79,15 @@ int encontrarElem(int *numeros, int medio,int medioAnterior, int largo)
 int main(int argc, char const *argv[])
 {
 
-    // Para ingreso de datos
-    // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
-    ifstream myFile("./in.txt");
-    cin.rdbuf(myFile.rdbuf());
-    // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    ofstream myFile2("./out.txt");
-    cout.rdbuf(myFile2.rdbuf());
+    // // Para ingreso de datos
+    // // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
+    // ifstream myFile("./in.txt");
+    // cin.rdbuf(myFile.rdbuf());
+    // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    // ofstream myFile2("./out.txt");
+    // cout.rdbuf(myFile2.rdbuf());
 
-    int largo = 0;
-    int elemento = 0;
+    int largo,elemento;
     cin >> largo;
     int *numeros = new int[largo];
 
@@ -102,5 +100,5 @@ int main(int argc, char const *argv[])
     
     int medio = (largo / 2);                      // El -1 para que el valor del medio sea igual a la pos del array
     cout << encontrarElem(numeros, medio,0, largo); // largo porque es la primera llamada.
-    //delete[] numeros; BOUZA
+    delete[] numeros;
 }

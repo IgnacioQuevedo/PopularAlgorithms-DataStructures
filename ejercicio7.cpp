@@ -19,7 +19,7 @@ public:
     }
 };
 
-void ejersDP(elemento** elementos, int maxTamanio, int maxLineas, int cantElem)
+void ejersDP(elemento **elementos, int maxTamanio, int maxLineas, int cantElem)
 {
 
     int ***matDP = new int **[cantElem]; // Aca cree el vector
@@ -35,7 +35,7 @@ void ejersDP(elemento** elementos, int maxTamanio, int maxLineas, int cantElem)
         }
     }
 
-    //Caso borde cuando el tamaño sea 0
+    // Caso borde cuando el tamaño sea 0
     for (int i = 0; i < cantElem; i++)
     {
         for (int z = 0; z <= maxLineas; z++)
@@ -44,7 +44,7 @@ void ejersDP(elemento** elementos, int maxTamanio, int maxLineas, int cantElem)
         }
     }
 
-    //Caso borde cuando la profundidad es 0
+    // Caso borde cuando la profundidad es 0
     for (int i = 0; i < cantElem; i++)
     {
         for (int j = 0; j <= maxTamanio; j++)
@@ -79,29 +79,40 @@ void ejersDP(elemento** elementos, int maxTamanio, int maxLineas, int cantElem)
 
                 if (j < elementos[i]->tamanio || z < elementos[i]->lineas)
                 {
-                    matDP[i][j][z] = matDP[i-1][j][z]; // Copio al de arriba
+                    matDP[i][j][z] = matDP[i - 1][j][z]; // Copio al de arriba
                 }
                 else
-                {   
-                    matDP[i][j][z] = max(matDP[i-1][j][z], elementos[i]->puntaje + matDP[i-1][j-elementos[i]->tamanio][z-elementos[i]->lineas]); // Me quedo con el mejor de los dos, es[i-1] porque es mochila 0,1. EN MOCHILA 0,1 PREGUNTO POR EL DE ARRIBA Y POR EL DE ARRIBA A LA IZQUIERDA.
+                {
+                    matDP[i][j][z] = max(matDP[i - 1][j][z], elementos[i]->puntaje + matDP[i - 1][j - elementos[i]->tamanio][z - elementos[i]->lineas]); // Me quedo con el mejor de los dos, es[i-1] porque es mochila 0,1. EN MOCHILA 0,1 PREGUNTO POR EL DE ARRIBA Y POR EL DE ARRIBA A LA IZQUIERDA.
                 }
             }
         }
     }
-    cout << matDP[cantElem -1][maxTamanio][maxLineas];
+    cout << matDP[cantElem - 1][maxTamanio][maxLineas];
+
+    //Liberamos la memoria de la matriz.
+    
+    for (int i = 0; i < cantElem; i++)
+    {
+        for (int j = 0; j <= maxTamanio; j++)
+        {
+            delete[] matDP[i][j];
+        }
+        delete[] matDP[i];
+    }
+    delete[] matDP;
 }
 
 int main(int argc, char const *argv[])
 {
 
-    // Para ingreso de datos
-    // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
-    ifstream myFile("./in.txt");
-    cin.rdbuf(myFile.rdbuf());
-
-    // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    ofstream myFile2("./out.txt");
-    cout.rdbuf(myFile2.rdbuf());
+    // // Para ingreso de datos
+    // // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
+    // ifstream myFile("./in.txt");
+    // cin.rdbuf(myFile.rdbuf());
+    // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    // ofstream myFile2("./out.txt");
+    // cout.rdbuf(myFile2.rdbuf());
 
     int cantArchivos, maxTamanio, maxLineas;
     cin >> cantArchivos >> maxTamanio >> maxLineas;
@@ -118,13 +129,13 @@ int main(int argc, char const *argv[])
 
     ejersDP(vectorElementos, maxTamanio, maxLineas, cantArchivos);
 
+    // Liberamos la memoria
 
     for (int i = 0; i < cantArchivos; i++)
     {
         delete vectorElementos[i];
         vectorElementos[i] = NULL;
     }
-    
     delete[] vectorElementos;
 
     return 0;

@@ -14,15 +14,6 @@ unsigned long long potenciaElevada(int base, int elevado) //PORQUE LA USA EL HOR
     return base * potenciaElevada(base, --elevado);
 }
 
-
-//TIENE QUE IR ACA, PORQUE SINO EL TAD HASH NO ES GENERICO, DEPENDIENDO DE LO QUE QUIERA GUARDAR EL USUARIO,
-//LA FUNCION HASH VA A UTILIZAR HORNER O NO. 
-//ENTONCES SI GUARDO PALABRAS PRECISO DE UN HORNER PARA TRANSFORMAR LA PALABRA A INT, Y RECIEN AHI PODER CONSEGUIR LA CUBETA
-//PERO SI SON INTS **HORNER NO SE PRECISA** ENTONCES SI PONGO LA FUNCION HASH EN EL HASH PROPIO
-//CRASHEA DADO QUE VA A LLAMAR A UN HORNER Y ES INTS Y ROMPE
-//ENTONCES HORNER Y FHASH TIENEN QUE IR EN LA IMPLE DEL USUARIO. YA QUE LA FHASH SE COMPORTA DISTINTO
-//DEPENDIENDO DEL TIPO DE DATO QUE GUARDE.
-
 unsigned long long horner(string clave) // funcion solo para strings (en int no hacer nada)
 {
     unsigned long long claveConvertida = 0;
@@ -48,12 +39,12 @@ int main(int argc, char const *argv[])
 {
     // Para ingreso de datos
     // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
-    ifstream myFile("./in.txt");
-    cin.rdbuf(myFile.rdbuf());
+    // ifstream myFile("./in.txt");
+    // cin.rdbuf(myFile.rdbuf());
 
-    // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    ofstream myFile2("./out.txt");
-    cout.rdbuf(myFile2.rdbuf());
+    // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    // ofstream myFile2("./out.txt");
+    // cout.rdbuf(myFile2.rdbuf());
 
     int cantPersonas, promedio = 0;
     int cantNotas, notaActual = 0;
@@ -66,15 +57,11 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < cantPersonas; i++)
     {
-
-        //cout << "Nombre del Estudiante" << endl;
         cin >> nombre;
-        //cout << "Cant notas" << endl;
         cin >> cantNotas;
 
         for (int i = 0; i < cantNotas; i++)
         {
-          //  cout << ("Ingrese Nota ") << i << endl;
             cin >> notaActual;
             promedio = promedio + notaActual;
         }
@@ -91,5 +78,6 @@ int main(int argc, char const *argv[])
  
     }
     miHash->destruir();
+    delete[] estudiantes;
     return 0; 
 }

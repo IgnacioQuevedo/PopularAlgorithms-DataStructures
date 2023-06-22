@@ -7,20 +7,17 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
    
-    // Para ingreso de datos
-    // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
-    ifstream myFile("./in.txt");
-    cin.rdbuf(myFile.rdbuf());
-    // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    ofstream myFile2("./out.txt");
-    cout.rdbuf(myFile2.rdbuf());
+    // // Para ingreso de datos
+    // // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
+    // ifstream myFile("./in.txt");
+    // cin.rdbuf(myFile.rdbuf());
+    // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    // ofstream myFile2("./out.txt");
+    // cout.rdbuf(myFile2.rdbuf());
 
-    int cantVertices = 0;
-    int cantAristas = 0;
-    cin >> cantVertices;
-    cin >> cantAristas;
-
-
+    int cantVertices,cantAristas;
+    cin >> cantVertices >> cantAristas;
+    
     Grafo* miGrafo = new Grafo(cantVertices);
     
     for (int i = 1; i <= cantVertices; i++)
@@ -28,14 +25,11 @@ int main(int argc, char const *argv[])
         miGrafo->agregarVertice(i);
     }
 
-    int origen = 0;
-    int conexion = 0;
+    int origen,conexion;
 
     for (int i = 0; i < cantAristas; i++)
     {   
-        cin >> origen;
-        cin >> conexion;
-        
+        cin >> origen >> conexion;
         miGrafo->agregarArista(origen,conexion);
     }
     
@@ -58,7 +52,4 @@ int main(int argc, char const *argv[])
     delete ret;
 
     return 0;
-    
-
-    //BOUZA:IDEM QUE LA OTRA PREGUNTA ACA. (ES NECESARIO BORRAR?)
 }
