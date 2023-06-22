@@ -59,7 +59,6 @@ int main(int argc, char const *argv[])
     int cantNotas, notaActual = 0;
     string nombre;
 
-    //cout << "Ingrese cantidad Personas" << endl;
     cin >> cantPersonas;
 
     HashCerrado <string,int> *miHash = new HashCerrado <string,int> (cantPersonas, funcionHash);
@@ -91,5 +90,6 @@ int main(int argc, char const *argv[])
         cout << estudiantes[i] << " " << miHash->elemento(estudiantes[i]) << endl;
  
     }
+    miHash->destruir();
     return 0; 
 }

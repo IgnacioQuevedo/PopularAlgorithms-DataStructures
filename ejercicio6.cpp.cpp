@@ -93,11 +93,14 @@ int main(int argc, char const *argv[])
     cin >> largo;
     int *numeros = new int[largo];
 
+    numeros[0] = -1; //Obviamos el primer lugar, por ende lo definimos en algo que sabemos que nunca puede ser.
     for (int i = 1; i <= largo; i++)
     {
         cin >> elemento;
         numeros[i] = elemento;
     }
+    
     int medio = (largo / 2);                      // El -1 para que el valor del medio sea igual a la pos del array
     cout << encontrarElem(numeros, medio,0, largo); // largo porque es la primera llamada.
+    //delete[] numeros; BOUZA
 }

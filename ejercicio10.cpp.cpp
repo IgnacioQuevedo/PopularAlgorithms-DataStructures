@@ -112,7 +112,8 @@ Lista<coordenadas *> *caminoMasCorto(char **mapa, int filas, int columnas, coord
     Lista<coordenadas *> *caminoOptimo = NULL;
 
     cMasCorto(mapa, filas, columnas, origen, destino, vis, caminoActual, caminoOptimo, posBedelia);
-
+    caminoActual->destruirLista();
+    delete caminoActual;
     return caminoOptimo;
 }
 
@@ -174,6 +175,14 @@ int main(int argc, char const *argv[])
         }
         cout << sumaCamino << endl;
     }
+
+
+    //Liberacion de memoria BOUZA
+    for (int i = 0; i < filas; i++)
+    {
+        delete[] mapa[i]; 
+    }
+    delete[] mapa;
 
     return 0;
 }

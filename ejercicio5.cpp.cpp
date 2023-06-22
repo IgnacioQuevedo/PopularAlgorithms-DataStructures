@@ -50,6 +50,15 @@ int main(int argc, char const *argv[])
         iter->avanzar();
    }
    
+    miGrafo->destruir();
+    ret->destruirLista();
+    iter = NULL;
+    delete iter;
+    delete miGrafo;
+    delete ret;
+
     return 0;
     
+
+    //BOUZA:IDEM QUE LA OTRA PREGUNTA ACA. (ES NECESARIO BORRAR?)
 }

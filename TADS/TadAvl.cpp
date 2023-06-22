@@ -77,9 +77,11 @@ private:
         nodoActual->der = aux;       // Lo colocamos a la der del nodoActual que queriamos rotar
 
         // Actualizamos las alturas
-        nodoActual->altura = 1+ this->max(altura(nodoActual->izq), altura(nodoActual->der));
-        nuevaRaiz->altura = 1+ this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
+        nodoActual->altura = 1 + this->max(altura(nodoActual->izq), altura(nodoActual->der));
+        nuevaRaiz->altura = 1 + this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
 
+        aux = NULL;
+        delete aux;
         return nuevaRaiz;
     }
 
@@ -93,9 +95,11 @@ private:
         nodoActual->izq = aux;       // Lo colocamos a la izq del nodoActual que queriamos rotar
 
         // Actualizamos las alturas de cada nodo
-        nodoActual->altura = 1+ this->max(altura(nodoActual->izq), altura(nodoActual->der));
-        nuevaRaiz->altura = 1+ this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
+        nodoActual->altura = 1 + this->max(altura(nodoActual->izq), altura(nodoActual->der));
+        nuevaRaiz->altura = 1 + this->max(altura(nuevaRaiz->izq), altura(nuevaRaiz->der));
 
+        aux = NULL;
+        delete aux;
         return nuevaRaiz;
     }
 
@@ -127,7 +131,7 @@ private:
         // Actualizamos las alturas
         arbol->altura = 1 + this->max(altura(arbol->izq), altura(arbol->der));
 
-         int balance = factorDeBalanceo(arbol);
+        int balance = factorDeBalanceo(arbol);
 
         if (balance < -1 && dato < arbol->izq->dato)
         {
@@ -160,9 +164,20 @@ private:
             arbol = rotarIzq(arbol);
             return;
         }
-        
     }
-    
+
+    void destruirRec(nodoAvl<T> *arbol)
+    {
+        if (arbol == nullptr)
+        {
+            return;
+        }
+
+        destruirRec(arbol->izq);
+        destruirRec(arbol->der);
+        delete arbol;
+    }
+
 public:
     Avl(int largoDado)
     {
@@ -176,14 +191,15 @@ public:
         this->insertarRec(this->arbol, dato);
     }
 
-    nodoAvl<T>* inOrder()
+    nodoAvl<T> *inOrder()
     {
         inOrderRec(this->arbol);
     }
-   
+
     void inOrderRec(nodoAvl<T> *&arbol)
     {
-        if (arbol == NULL){
+        if (arbol == NULL)
+        {
             return;
         }
         inOrderRec(arbol->der);
@@ -194,5 +210,10 @@ public:
     bool esVacio()
     {
         return cantElem == 0;
+    }
+
+    void destruir()
+    {
+        destruirRec(this->arbol);
     }
 };

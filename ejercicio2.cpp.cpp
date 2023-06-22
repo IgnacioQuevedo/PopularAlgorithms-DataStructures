@@ -28,6 +28,7 @@ int main(int argc, char const *argv[])
         miArbol->insertar(palabra);
     }
     miArbol->inOrder();
-
+    miArbol->destruir();
+    delete miArbol;
     return 0;
 }

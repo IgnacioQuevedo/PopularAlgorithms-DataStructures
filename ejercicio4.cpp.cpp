@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "./TADS/TadGrafo.cpp"
+#include "./TADS/TadGrafoDijkstra.cpp"
+//#include "./TADS/TadGrafoDijkstra.cpp"
 using namespace std;
 
 int main(int argc, char const *argv[])
@@ -17,8 +18,7 @@ int main(int argc, char const *argv[])
 
     int cantVertices = 0;
     cin >> cantVertices;
-    Grafo<int> *miGrafo = new Grafo<int>(cantVertices);
-
+    Grafo *miGrafo = new Grafo(cantVertices);
     for (int i = 1; i <= cantVertices; i++)
     {
         miGrafo->agregarVertice(i);
@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
 
     cin >> origen;
     cin >> destino;
-    nodoDobleDato<int> *retorno = miGrafo->Dijkstra(origen, destino);
+    nodoDobleDato *retorno = miGrafo->Dijkstra(origen, destino);
 
     if (retorno == NULL) // Significa que NO hay realmente un camino de inicio a fin
     {
@@ -86,6 +86,15 @@ int main(int argc, char const *argv[])
             iter->avanzar();
         }
         cout << "]";
+        iter = NULL;
+        delete iter;
     }
+
+    //Liberacion de memoria
+    miGrafo->destruir();
+    retorno->listaElem->destruirLista();
+    delete miGrafo;
+    delete retorno;
+    
     return 0;
 }

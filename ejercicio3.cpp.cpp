@@ -59,5 +59,8 @@ int main(int argc, char const *argv[])
             cout << fixed << promedioGrupo << " " << viajeros << endl;
         }
     }
+    //BOUZA: BORRO ACA?
+    miHeap->destruir();
+    delete miHeap;
     return 0;
 }

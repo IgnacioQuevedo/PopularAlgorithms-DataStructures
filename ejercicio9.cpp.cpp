@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     cin >> filasPascal;       // N
     cin >> cantCombinaciones; // P
 
-    int *pascal = new int[filasPascal + 1]; // Porque arranca en nivel 0
+    long long *pascal = new long long[filasPascal + 1]; // Porque arranca en nivel 0
 
     int exponenteCombinatoria = 0; // N de la combinatoria
     int baseCombinatoria = 0;      // Base de la combinatoria

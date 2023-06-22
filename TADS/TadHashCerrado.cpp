@@ -143,7 +143,6 @@ public:
 
     void destruir()
     {
-
         for (int i = 0; i < this->largo; i++)
         {
             delete this->Tablahash[i];

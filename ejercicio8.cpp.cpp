@@ -53,6 +53,12 @@ int main(int argc, char const *argv[])
         idVuelo++; //No sirve de nada, solo lo tengo para que se vea mas lindo
     }
     cout << heapPlataformas->largo();
+
+    //Liberacion de memoria
+    heapPlataformas->destruir();
+    heapVuelos->destruir();
+    delete heapPlataformas;
+    delete heapVuelos;
     return 0;
 }
 

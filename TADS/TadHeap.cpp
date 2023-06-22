@@ -285,7 +285,6 @@ public:
         {
             delete this->vecNodoHeap[i];
         }
-
         delete[] this->vecNodoHeap;
     }
 
