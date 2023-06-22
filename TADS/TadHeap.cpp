@@ -226,7 +226,7 @@ public:
         this->tope = 0;
         this->vecNodoHeap = new nodoHeap<T> *[maxElem];
         this->esMinHeap = esMinHeap;
-        for (int i = 0; i <= maxElem; i++)
+        for (int i = 0; i < maxElem; i++)
         {
             this->vecNodoHeap[i] = NULL;
         }
@@ -284,6 +284,7 @@ public:
         for (int i = 0; i < this->tope; i++)
         {
             delete this->vecNodoHeap[i];
+            this->vecNodoHeap[i] = NULL;
         }
         delete[] this->vecNodoHeap;
     }
@@ -311,18 +312,5 @@ public:
     int largo()
     {
         return this->tope;
-    }
-
-    bool chequearHeap()
-    {
-        for (int i = 0; i < this->tope; i++)
-        {
-            float b = this->vecNodoHeap[i]->prioridad;
-            if (b <= 0.1 && b != 0)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 };

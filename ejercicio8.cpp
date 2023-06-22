@@ -6,27 +6,27 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    // Para ingreso de datos
+     // Para ingreso de datos
     // IMPORTANTE! BORRAR O COMENTAR LAS SIGUIENTES LINEAS  EN TODOS LOS EJERCICIOS DEL OBLIGATORIO. NO PUEDEN ESTAR EN NINGUNA ENTREGA!
     // ifstream myFile("./in.txt");
     // cin.rdbuf(myFile.rdbuf());
+
     // // Para salida (BORRAR PARA ENTREGA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
     // ofstream myFile2("./out.txt");
     // cout.rdbuf(myFile2.rdbuf());
 
     int cantVuelos = 0;
     cin >> cantVuelos;
-
     Heap<int> *heapVuelos = new Heap<int>(cantVuelos, true);
     int llegada = 0;
     int salida = 0;
     int idVuelo = 1;
-    // Generamos el Heap Con los vuelos ordenados
+    //Generamos el Heap Con los vuelos ordenados
     for (int i = 0; i < cantVuelos; i++)
     {
         cin >> llegada;
         cin >> salida;
-        heapVuelos->encolar(llegada, salida); // Heap ordenado por llegada.
+        heapVuelos->encolar(llegada, salida); // Heap ordenado por llegada
     }
 
     Heap<int> *heapPlataformas = new Heap<int>(cantVuelos, true);
@@ -52,6 +52,8 @@ int main(int argc, char const *argv[])
         heapVuelos->desencolar();
         idVuelo++; // No sirve de nada, solo lo tengo para que se vea mas lindo
     }
+    int largo = 0;
+    largo = heapPlataformas->largo();
     cout << heapPlataformas->largo();
 
     //Liberacion de memoria

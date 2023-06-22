@@ -206,6 +206,8 @@ public:
                 }
                 iter->avanzar();
             }
+            iter = NULL;
+            delete iter;
             this->vis[posOrigen] = true; // Una vez estudiadas todas las aristas, el vertice actual ya figura como visitado.
         }
         // AFUERA DEL WHILE,ESTA PARTE DE ABAJO GENERA TODA LA DEVOLUCION
@@ -227,6 +229,10 @@ public:
         retorno->listaElem->insertarPpio(origen);
         retorno->totalCostosDeAristas = dist[destino - 1];
 
+
+        miHeap->destruir();
+        delete[] dist;
+        delete[] ant;
         return retorno;
     }
 
@@ -242,6 +248,7 @@ public:
                 delete arista;
                 iter->avanzar();
             }
+            iter = NULL;
             delete iter;
             delete listaAdy[i];
         }

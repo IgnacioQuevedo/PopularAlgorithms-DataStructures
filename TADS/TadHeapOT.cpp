@@ -181,7 +181,7 @@ public:
         this->maxElem = maxElem;
         this->tope = 0;
         this->vecNodoHeap = new nodoHeap<T> *[maxElem];
-        for (int i = 0; i <= maxElem; i++)
+        for (int i = 0; i < maxElem; i++)
         {
             this->vecNodoHeap[i] = NULL;
         }

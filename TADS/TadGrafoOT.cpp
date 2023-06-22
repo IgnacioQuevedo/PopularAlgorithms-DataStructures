@@ -144,6 +144,8 @@ public:
                 iter->avanzar();
             }
         }
+        miHeap->destruir();
+        delete miHeap;
         return retorno;
     }
 
