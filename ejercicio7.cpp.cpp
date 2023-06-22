@@ -19,7 +19,7 @@ public:
     }
 };
 
-void ejersDP(elemento **elementos, int maxTamanio, int maxLineas, int cantElem)
+void ejersDP(elemento** elementos, int maxTamanio, int maxLineas, int cantElem)
 {
 
     int ***matDP = new int **[cantElem]; // Aca cree el vector
@@ -32,17 +32,6 @@ void ejersDP(elemento **elementos, int maxTamanio, int maxLineas, int cantElem)
         for (int j = 0; j <= maxTamanio; j++)
         {
             matDP[i][j] = new int[maxLineas + 1]; // Aca creamos la "profundidad" -> "una fila que va hacia adentro"
-        }
-    }
-    // Inicializacion de la matriz tridimensional
-    for (int i = 0; i < cantElem; i++)
-    {
-        for (int j = 0; j <= maxTamanio; j++)
-        {
-            for (int z = 0; z <= maxLineas; z++)
-            {
-                matDP[i][j][z] = -1;
-            }
         }
     }
 
@@ -93,8 +82,8 @@ void ejersDP(elemento **elementos, int maxTamanio, int maxLineas, int cantElem)
                     matDP[i][j][z] = matDP[i-1][j][z]; // Copio al de arriba
                 }
                 else
-                {
-                    matDP[i][j][z] = max(matDP[i-1][j][z], elementos[i]->puntaje + matDP[i][j-elementos[i]->tamanio][z-elementos[i]->lineas]); // Me quedo con el mejor de los dos
+                {   
+                    matDP[i][j][z] = max(matDP[i-1][j][z], elementos[i]->puntaje + matDP[i-1][j-elementos[i]->tamanio][z-elementos[i]->lineas]); // Me quedo con el mejor de los dos, es[i-1] porque es mochila 0,1. EN MOCHILA 0,1 PREGUNTO POR EL DE ARRIBA Y POR EL DE ARRIBA A LA IZQUIERDA.
                 }
             }
         }
@@ -128,6 +117,15 @@ int main(int argc, char const *argv[])
     }
 
     ejersDP(vectorElementos, maxTamanio, maxLineas, cantArchivos);
+
+
+    for (int i = 0; i < cantArchivos; i++)
+    {
+        delete vectorElementos[i];
+        vectorElementos[i] = NULL;
+    }
+    
+    delete[] vectorElementos;
 
     return 0;
 }
